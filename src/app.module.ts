@@ -5,6 +5,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { RequestLoggerMiddleware } from './common/middlewares/request-logger.middleware';
 import { UsersModule } from './users/users.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -21,13 +22,14 @@ import { UsersModule } from './users/users.module';
         username: configService.get('MYSQL_USERNAME'),
         password: configService.get('MYSQL_PASSWORD'),
         database: configService.get('MYSQL_DATABASE'),
-        entities: [],
-        synchronize: true,
+        autoLoadEntities: true,
+        synchronize: true, // WARNING: set to false on production! As it will drop all tables and re-create them if entities changed.
       }),
       inject: [ConfigService],
     }),
 
     UsersModule,
+    AuthModule,
 
   ],
   controllers: [AppController],
