@@ -10,6 +10,7 @@ async function bootstrap() {
     .setTitle('EduRPA API')
     .setDescription('API for EduRPA')
     .setVersion('1.0')
+    .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
