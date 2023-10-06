@@ -10,7 +10,9 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Get('/me')
-  async whoAmI(@UserDecor() user: UserPayload) {
-    return this.usersService.findOneByEmail(user.email);
+  async whoAmI(@UserDecor() userPayload: UserPayload) {
+    return this.usersService.findOneByEmail(userPayload.email, {
+      exclude: ['hashedPassword'],
+    });
   }
 }

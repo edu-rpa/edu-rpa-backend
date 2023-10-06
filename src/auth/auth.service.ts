@@ -3,6 +3,8 @@ import { User } from 'src/users/user.entity';
 import { UsersService } from 'src/users/users.service';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
+import { RegisterDto } from './dto/register.dto';
+import { LoginDto } from './dto/login.dto';
 
 @Injectable()
 export class AuthService {
@@ -11,7 +13,10 @@ export class AuthService {
     private jwtService: JwtService
   ) {}
 
-  async validateUser(email: string, password: string): Promise<Omit<User, 'hashedPassword'> | null> {
+  async validateUser({
+    email,
+    password,
+  }: LoginDto): Promise<Omit<User, 'hashedPassword'> | null> {
     const user = await this.usersService.findOneByEmail(email);
     if (!user) {
       return null;
@@ -30,5 +35,9 @@ export class AuthService {
     return {
       accessToken: this.jwtService.sign(payload),
     };
+  }
+
+  async registerUser(registerDto: RegisterDto) {
+    return 'register';
   }
 }

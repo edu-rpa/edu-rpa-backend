@@ -10,8 +10,18 @@ export class UsersService {
     private usersRepository: Repository<User>,
   ) {}
 
-  async findOneByEmail(email: string): Promise<User | null> {
-    // WARNING: findOneBy may return null (but its type doesn't say so)
-    return this.usersRepository.findOneBy({ email });
+  async findOneByEmail(email: string, options?: {
+    exclude: Array<keyof User>
+  }): Promise<User | null> {
+    const user = await this.usersRepository.findOneBy({ email });
+    if (!user) {
+      return null;
+    }
+    if (options?.exclude) {
+      options.exclude.forEach((key) => {
+        delete user[key];
+      });
+    }
+    return user;
   }
 }
