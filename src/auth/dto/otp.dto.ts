@@ -7,3 +7,8 @@ export class VerifyOtpDto {
   @IsNotEmpty()
   otpCode: string;
 }
+
+export class ResendOtpDto {
+  @IsEmail()
+  email: string;
+}

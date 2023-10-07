@@ -11,7 +11,7 @@ import { Model } from 'mongoose';
 import * as speakeasy from 'speakeasy';
 import { CannotRequestOtpException, EmailAlreadyExistsException, InvalidOtpException } from 'src/common/exceptions';
 import { EmailService } from 'src/email/email.service';
-import { VerifyOtpDto } from './dto/verify-otp.dto';
+import { ResendOtpDto, VerifyOtpDto } from './dto/otp.dto';
 
 @Injectable()
 export class AuthService {
@@ -50,11 +50,7 @@ export class AuthService {
     await this.checkIfEmailExists(registerDto.email);
     const otpCode = await this.generateOtpCode();
     await this.createOtp(registerDto, otpCode);
-    await this.emailService.sendEmailWithHtml(
-      registerDto.email,
-      'OTP Code',
-      `Your OTP Code is <b>${otpCode}</b>.`
-    );
+    await this.emailService.sendOtpEmail(registerDto.email, otpCode);
     return { email: registerDto.email };
   }
 
@@ -75,6 +71,13 @@ export class AuthService {
     return this.signJwt(user);
   }
 
+  async resendOtp(resendOtpDto: ResendOtpDto) {
+    const otpCode = await this.generateOtpCode();
+    await this.updateOtp(resendOtpDto, otpCode);
+    await this.emailService.sendOtpEmail(resendOtpDto.email, otpCode);
+    return { email: resendOtpDto.email };
+  }
+
   private async checkIfEmailExists(email: string) {
     const user = await this.usersService.findOneByEmail(email);
     if (user) {
@@ -90,22 +93,32 @@ export class AuthService {
     return otp;
   }
 
+  private async checkIfCanRequestOtp(email: string, context: 'create' | 'update') {
+    const existingOtp = await this.otpModel.findOne({ email });
+    if (!existingOtp) {
+      if (context === 'update') {
+        throw new CannotRequestOtpException();
+      } else {
+        return;
+      }
+    }
+
+    const now = new Date();
+    const timeDiff = now.getTime() - existingOtp.createdAt.getTime();
+    const timeDiffSeconds = timeDiff / 1000;
+    if (timeDiffSeconds <= 60) {
+      throw new CannotRequestOtpException();
+    } else if (context === 'create') {
+      await this.otpModel.deleteOne({ email });
+    }
+  }
+
   private async createOtp({
     email,
     name,
     password,
   }: RegisterDto, otpCode: string) {
-    const existingOtp = await this.otpModel.findOne({ email });
-    if (existingOtp) {
-      const now = new Date();
-      const timeDiff = now.getTime() - existingOtp.createdAt.getTime();
-      const timeDiffSeconds = timeDiff / 1000;
-      if (timeDiffSeconds <= 60) {
-        throw new CannotRequestOtpException();
-      } else {
-        await this.otpModel.deleteOne({ email });
-      }
-    }
+    await this.checkIfCanRequestOtp(email, 'create');
 
     const otp = new this.otpModel({ 
       email, 
@@ -114,5 +127,14 @@ export class AuthService {
       tempHashedPassword: await bcrypt.hash(password, 10),
     });
     await otp.save();
+  }
+
+  private async updateOtp({ email }: ResendOtpDto, otpCode: string) {
+    await this.checkIfCanRequestOtp(email, 'update');
+
+    await this.otpModel.updateOne(
+      { email },
+      { code: otpCode, createdAt: new Date() }
+    );
   }
 }

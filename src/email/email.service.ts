@@ -35,4 +35,12 @@ export class EmailService {
       html,
     });
   }
+
+  async sendOtpEmail(email: string, otpCode: string) {
+    await this.sendEmailWithHtml(
+      email,
+      'OTP Code',
+      `Your OTP Code is <b>${otpCode}</b>.`
+    );
+  }
 }
