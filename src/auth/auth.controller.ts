@@ -4,6 +4,7 @@ import { ApiBody, ApiTags } from '@nestjs/swagger';
 import { Public } from 'src/common/decorators/public.decorator';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
+import { VerifyOtpDto } from './dto/verify-otp.dto';
 
 @Controller('auth')
 @ApiTags('auth')
@@ -52,5 +53,23 @@ export class AuthController {
   })
   async register(@Body() registerDto: RegisterDto) {
     return this.authService.registerUser(registerDto);
+  }
+
+  @Post('verify-otp')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        email: {
+          type: 'string',
+        },
+        otpCode: {
+          type: 'string',
+        },
+      },
+    },
+  })
+  async verifyOtp(@Body() verifyOtpDto: VerifyOtpDto) {
+    return this.authService.verifyOtp(verifyOtpDto);
   }
 }
