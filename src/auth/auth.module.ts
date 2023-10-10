@@ -11,6 +11,7 @@ import { JwtAuthGuard } from './guard/jwt-auth.guard';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Otp, OtpSchema } from 'src/schemas/otp.schema';
 import { EmailModule } from 'src/email/email.module';
+import { GoogleStrategy } from './strategy/google.strategy';
 
 @Module({
 
@@ -31,6 +32,7 @@ import { EmailModule } from 'src/email/email.module';
   providers: [
     AuthService, 
     JwtStrategy,
+    GoogleStrategy,
     {
       provide: APP_GUARD,
       useClass: JwtAuthGuard,

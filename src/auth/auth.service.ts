@@ -39,7 +39,7 @@ export class AuthService {
     return null;
   }
 
-  async signJwt(user: Omit<User, 'hashedPassword'>) {
+  async signJwt(user: Pick<User, 'email' | 'id'>) {
     const payload = { email: user.email, id: user.id };
     return {
       accessToken: this.jwtService.sign(payload),
