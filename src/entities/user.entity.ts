@@ -18,6 +18,18 @@ export class User {
   })
   avatarUrl: string;
 
-  @Column()
+  @Column({
+    nullable: true,
+  })
   hashedPassword: string;
+
+  @Column({
+    default: 'local',
+  })
+  provider: string;
+
+  @Column({
+    nullable: true,
+  })
+  providerId: string;
 }
