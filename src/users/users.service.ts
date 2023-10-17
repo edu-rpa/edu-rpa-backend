@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from '../entities/user.entity';
+import { AuthenticationProvider, User } from '../entities/user.entity';
 import { Repository } from 'typeorm';
 import { EmailAlreadyExistsException } from 'src/common/exceptions';
 
@@ -58,10 +58,10 @@ export class UsersService {
         name: displayName,
         email,
         avatarUrl,
-        provider: 'google',
+        provider: AuthenticationProvider.GOOGLE,
         providerId: id,
       });
-    } else if (user.provider !== 'google') {
+    } else if (user.provider !== AuthenticationProvider.GOOGLE) {
       throw new EmailAlreadyExistsException();
     }
     return user;

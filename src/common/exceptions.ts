@@ -17,3 +17,15 @@ export class InvalidOtpException extends HttpException {
     super("Invalid otp", 400);
   }
 }
+
+export class InvalidStateException extends HttpException {
+  constructor() {
+    super("Invalid state", 400);
+  }
+}
+
+export class UnableToCreateConnectionException extends HttpException {
+  constructor() {
+    super("Unable to create connection", 400);
+  }
+}
