@@ -9,9 +9,11 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Otp } from 'src/schemas/otp.schema';
 import { Model } from 'mongoose';
 import * as speakeasy from 'speakeasy';
-import { CannotRequestOtpException, EmailAlreadyExistsException, InvalidOtpException } from 'src/common/exceptions';
+import { CannotRequestOtpException, EmailAlreadyExistsException, InvalidOtpException, InvalidStateException } from 'src/common/exceptions';
 import { EmailService } from 'src/email/email.service';
 import { ResendOtpDto, VerifyOtpDto } from './dto/otp.dto';
+import { ConnectionService, UserTokenFromProvider } from 'src/connection/connection.service';
+import { AuthorizationProvider } from 'src/entities/connection.entity';
 
 @Injectable()
 export class AuthService {
@@ -19,6 +21,7 @@ export class AuthService {
     private usersService: UsersService,
     private jwtService: JwtService,
     private emailService: EmailService,
+    private connectionSerivce: ConnectionService,
     @InjectModel(Otp.name) private otpModel: Model<Otp>
   ) {}
 
@@ -76,6 +79,28 @@ export class AuthService {
     await this.updateOtp(resendOtpDto, otpCode);
     await this.emailService.sendOtpEmail(resendOtpDto.email, otpCode);
     return { email: resendOtpDto.email };
+  }
+
+  async authorizeUserFromProvider(userToken: UserTokenFromProvider, state: string, provider: AuthorizationProvider) {
+    let fromUser: number;
+    try {
+      fromUser = JSON.parse(state).fromUser;
+      if (!fromUser || Number.isNaN(fromUser)) {
+        throw new Error();
+      }
+    } catch (error) {
+      throw new InvalidStateException();
+    }
+
+    const { accessToken, refreshToken, profile } = userToken;
+    const email = profile.emails?.[0].value;
+    this.connectionSerivce.createConnection({
+      fromUser,
+      accessToken,
+      refreshToken,
+      email,
+      provider,
+    });
   }
 
   private async checkIfEmailExists(email: string) {
