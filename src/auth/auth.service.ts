@@ -94,7 +94,7 @@ export class AuthService {
 
     const { accessToken, refreshToken, profile } = userToken;
     const email = profile.emails?.[0].value;
-    this.connectionSerivce.createConnection({
+    await this.connectionSerivce.createConnection({
       fromUser,
       accessToken,
       refreshToken,
