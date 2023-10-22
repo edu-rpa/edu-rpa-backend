@@ -1,0 +1,222 @@
+[
+  {
+    "_id": "google_workspace",
+    "displayName": "Google Workspace",
+    "description": "Help you integrate your work with Google Workspace applications (like Google Drive)",
+    "iconCode": "FcGoogle",
+    "activityTemplates": [
+      {
+        "templateId": "drive.create_folder",
+        "displayName": "Create folder",
+        "description": "Create a Google Drive folder in a given directory",
+        "iconCode": "FaGoogleDrive",
+        "type": "activity",
+        "arguments": {
+          "Connection": {
+            "type": "connection.drive",
+            "value": null
+          },
+          "Folder name": {
+            "type": "string",
+            "value": ""
+          },
+          "Parent folder name": {
+            "type": "string",
+            "value": ""
+          }
+        },
+        "return": {
+          "folder ID": null,
+          "folder URL": null
+        }
+      },
+      {
+        "templateId": "drive.upload_file",
+        "displayName": "Upload file",
+        "description": "Upload a file to a given directory in Google Drive",
+        "iconCode": "FaGoogleDrive",
+        "type": "activity",
+        "arguments": {
+          "Connection": {
+            "type": "connection.drive",
+            "value": null
+          },
+          "File": {
+            "type": "file",
+            "value": null
+          },
+          "Destination folder name": {
+            "type": "string",
+            "value": ""
+          },
+          "Overwrite if file exists": {
+            "type": "boolean",
+            "value": false
+          }
+        },
+        "return": {
+          "file ID": null
+        }
+      },
+      {
+        "templateId": "drive.for_each_file_in_folder",
+        "displayName": "For each file in folder",
+        "description": "Execute a set of activities for each file in a given folder in Google Drive",
+        "iconCode": "FaGoogleDrive",
+        "type": "subprocess",
+        "arguments": {
+          "Connection": {
+            "type": "connection.drive",
+            "value": null
+          },
+          "Folder name": {
+            "type": "string",
+            "value": ""
+          }
+        },
+        "return": null
+      }
+    ]
+  },
+  {
+    "_id": "control",
+    "displayName": "Control",
+    "description": "Help you control the execution flow of your robot",
+    "iconCode": "MdControlCamera",
+    "activityTemplates": [
+      {
+        "templateId": "if",
+        "displayName": "If ... then ... else",
+        "description": "If a condition is met, then execute a set of activities, otherwise execute another set of activities",
+        "iconCode": "AiOutlineBranches",
+        "type": "branch",
+        "arguments": {
+          "Condition": {
+            "type": "expression.logic",
+            "value": {
+              "left": {
+                "type": "string",
+                "value": ""
+              },
+              "right": {
+                "type": "string",
+                "value": ""
+              },
+              "operator": {
+                "type": "operator.logic",
+                "value": null
+              }
+            }
+          }
+        },
+        "return": null
+      },
+      {
+        "templateId": "for_each",
+        "displayName": "For each ... in ...",
+        "description": "Execute a set of activities for each item in a list",
+        "iconCode": "ImLoop2",
+        "type": "subprocess",
+        "arguments": {
+          "List": {
+            "type": "expression.list",
+            "value": null
+          },
+          "Item": {
+            "type": "string",
+            "value": ""
+          }
+        },
+        "return": null
+      }
+    ]
+  },
+  {
+    "_id": "browser_automation",
+    "displayName": "Browser automation",
+    "description": "Help you automate tasks that need to be done in a web browser (like Chrome)",
+    "iconCode": "TbBrowserCheck",
+    "activityTemplates": [
+      {
+        "templateId": "use_browser",
+        "displayName": "Use browser",
+        "description": "Open a browser and use it to execute a set of activities",
+        "iconCode": "GoBrowser",
+        "type": "subprocess",
+        "arguments": {},
+        "return": null
+      },
+      {
+        "templateId": "go_to_url",
+        "displayName": "Go to URL",
+        "description": "Go to a given URL in the current browser tab",
+        "iconCode": "GoBrowser",
+        "arguments": {
+          "URL": {
+            "type": "string",
+            "value": ""
+          }
+        },
+        "return": null
+      },
+      {
+        "templateId": "click",
+        "displayName": "Click",
+        "description": "Click on a given element in the current browser tab",
+        "iconCode": "FaMousePointer",
+        "arguments": {
+          "Element": {
+            "type": "expression.element",
+            "value": null
+          }
+        },
+        "return": null
+      },
+      {
+        "templateId": "type",
+        "displayName": "Type",
+        "description": "Type a given text into a given element in the current browser tab",
+        "iconCode": "FaKeyboard",
+        "arguments": {
+          "Element": {
+            "type": "expression.element",
+            "value": null
+          },
+          "Text": {
+            "type": "string",
+            "value": ""
+          }
+        },
+        "return": null
+      },
+      {
+        "templateId": "wait",
+        "displayName": "Wait",
+        "description": "Wait for a given amount of time",
+        "iconCode": "FaClock",
+        "arguments": {
+          "Time": {
+            "type": "expression.time",
+            "value": null
+          }
+        },
+        "return": null
+      },
+      {
+        "templateId": "get_text",
+        "displayName": "Get text",
+        "description": "Get the text of a given element in the current browser tab",
+        "iconCode": "FaFont",
+        "arguments": {
+          "Element": {
+            "type": "expression.element",
+            "value": null
+          }
+        },
+        "return": {
+          "text": null
+        }
+      }
+    ]
+  }
+]
