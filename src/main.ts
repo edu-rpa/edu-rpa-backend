@@ -6,6 +6,9 @@ import { ValidationPipe } from '@nestjs/common';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  // enable CORS
+  app.enableCors();
+
   // initialize Swagger
   const config = new DocumentBuilder()
     .setTitle('EduRPA API')
