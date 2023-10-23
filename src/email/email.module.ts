@@ -6,7 +6,6 @@ import { MailerModule } from '@nestjs-modules/mailer';
 import * as path from 'path';
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true }),
     MailerModule.forRootAsync({
       useFactory: (configService: ConfigService) => ({
         transport: {
