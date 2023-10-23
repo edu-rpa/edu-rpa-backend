@@ -151,6 +151,7 @@
         "displayName": "Go to URL",
         "description": "Go to a given URL in the current browser tab",
         "iconCode": "GoBrowser",
+        "type": "activity",
         "arguments": {
           "URL": {
             "type": "string",
@@ -164,6 +165,7 @@
         "displayName": "Click",
         "description": "Click on a given element in the current browser tab",
         "iconCode": "FaMousePointer",
+        "type": "activity",
         "arguments": {
           "Element": {
             "type": "expression.element",
@@ -177,6 +179,7 @@
         "displayName": "Type",
         "description": "Type a given text into a given element in the current browser tab",
         "iconCode": "FaKeyboard",
+        "type": "activity",
         "arguments": {
           "Element": {
             "type": "expression.element",
@@ -194,6 +197,7 @@
         "displayName": "Wait",
         "description": "Wait for a given amount of time",
         "iconCode": "FaClock",
+        "type": "activity",
         "arguments": {
           "Time": {
             "type": "expression.time",
@@ -207,6 +211,7 @@
         "displayName": "Get text",
         "description": "Get the text of a given element in the current browser tab",
         "iconCode": "FaFont",
+        "type": "activity",
         "arguments": {
           "Element": {
             "type": "expression.element",
@@ -218,5 +223,12 @@
         }
       }
     ]
+  },
+  {
+    "_id": "document_automation",
+    "displayName": "Document automation",
+    "description": "Help you automate tasks related to documents (traditional paper documents or digital documents like PDFs) with the help of AI",
+    "iconCode": "FaFileAlt",
+    "activityTemplates": []
   }
 ]
