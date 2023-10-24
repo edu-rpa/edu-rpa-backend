@@ -1,46 +1,19 @@
 import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import * as nodemailer from 'nodemailer';
+import { MailerService } from '@nestjs-modules/mailer';
 
 @Injectable()
 export class EmailService {
-  private transporter: nodemailer.Transporter;
-
-  constructor(
-    private configService: ConfigService,
-  ) {
-    this.transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: configService.get('EMAIL_USERNAME'),
-        pass: configService.get('EMAIL_PASSWORD'),
-      },
-    });
-  }
-
-  async sendEmail(email: string, subject: string, text: string) {
-    await this.transporter.sendMail({
-      from: this.configService.get('EMAIL_FROM'),
-      to: email,
-      subject,
-      text,
-    });
-  }
-
-  async sendEmailWithHtml(email: string, subject: string, html: string) {
-    await this.transporter.sendMail({
-      from: this.configService.get('EMAIL_FROM'),
-      to: email,
-      subject,
-      html,
-    });
-  }
+  constructor(private mailerService: MailerService) {}
 
   async sendOtpEmail(email: string, otpCode: string) {
-    await this.sendEmailWithHtml(
-      email,
-      'OTP Code',
-      `Your OTP Code is <b>${otpCode}</b>.`
-    );
+    await this.mailerService.sendMail({
+      to: email,
+      subject: 'Welcome to EduRPA! Confirm your Email',
+      template: 'verifyOTP.hbs',
+      context: {
+        name: email,
+        otpCode,
+      },
+    });
   }
 }
