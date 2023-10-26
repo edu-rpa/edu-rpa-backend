@@ -50,3 +50,33 @@ export class VariableArgument implements Argument {
   type: `variable`;
   value: string;
 }
+
+export class StringArgument implements Argument {
+  type: 'string';
+  value: string;
+}
+
+export class NumberArgument implements Argument {
+  type: 'number';
+  value: number;
+}
+
+export class BooleanArgument implements Argument {
+  type: 'boolean';
+  value: boolean;
+}
+
+export class FileArgument implements Argument {
+  type: 'file';
+  value: string;
+}
+
+export class ExpressionArgument implements Argument {
+  type: `expression.${string}`;
+  value: any;
+}
+
+export class OperatorArgument implements Argument {
+  type: `operator.${string}`;
+  value: string;
+}
