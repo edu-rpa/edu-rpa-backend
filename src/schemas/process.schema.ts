@@ -4,10 +4,19 @@ import { ActivityTemplate } from './activity-package.schema';
 
 @Schema()
 export class Process extends Document {
-  @Prop({ required: true })
+  @Prop()
+  _id: number;
+
+  @Prop({ 
+    required: true,
+    type: Object, 
+  })
   variables: Variables;
 
-  @Prop({ required: true })
+  @Prop({ 
+    required: true,
+    type: [Object],
+  })
   activities: Activity[];
 }
 

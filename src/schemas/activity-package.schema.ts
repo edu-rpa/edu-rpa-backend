@@ -1,6 +1,12 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 
+export enum TemplateType {
+  ACTIVITY = 'activity',
+  SUBPROCESS = 'subprocess',
+  GATEWAY = 'gateway'
+}
+
 @Schema({
   collection: 'packages'
 })
@@ -28,6 +34,7 @@ export class ActivityTemplate {
   displayName: string;
   description: string;
   iconCode: string;
+  type: TemplateType;
   arguments: {
     [argumentName: string]: Argument
   };

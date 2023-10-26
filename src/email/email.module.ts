@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { EmailService } from './email.service';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigService } from '@nestjs/config';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { MailerModule } from '@nestjs-modules/mailer';
 import * as path from 'path';
