@@ -1,4 +1,4 @@
-import { HttpException } from "@nestjs/common";
+import { BadRequestException, HttpException } from "@nestjs/common";
 
 export class EmailAlreadyExistsException extends HttpException {
   constructor() {
@@ -27,5 +27,14 @@ export class InvalidStateException extends HttpException {
 export class UnableToCreateConnectionException extends HttpException {
   constructor() {
     super("Unable to create connection", 400);
+  }
+}
+
+export class ProcessValidationFailedException extends BadRequestException {
+  constructor(description: string) {
+    super("Failed to validate process", {
+      cause: new Error(),
+      description,
+    });
   }
 }

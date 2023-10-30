@@ -2,6 +2,14 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 import { ActivityTemplate } from './activity-package.schema';
 
+export enum VariableType {
+  CONNECTION_DRIVE = 'connection:Google Drive',
+  STRING = 'string',
+  NUMBER = 'number',
+  BOOLEAN = 'boolean',
+  FILE = 'file',
+} 
+
 @Schema()
 export class Process extends Document {
   @Prop()
@@ -27,7 +35,7 @@ export interface Variables {
 }
 
 export interface Variable {
-  type: string,
+  type: VariableType,
   isArgument: boolean,
   defaultValue: any, 
 }
@@ -37,6 +45,7 @@ export class Activity extends ActivityTemplate {
   packageId: string;
   prev: string[];
   next: null | string | IfNext;
+  body?: Activity[];
 }
 
 export interface IfNext {

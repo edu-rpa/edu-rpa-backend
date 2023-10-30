@@ -2,8 +2,10 @@ import { Controller, Get, Query } from '@nestjs/common';
 import { ProcessesService } from './processes.service';
 import { UserDecor } from 'src/common/decorators/user.decorator';
 import { UserPayload } from 'src/auth/strategy/jwt.strategy';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('processes')
+@ApiTags('processes')
 export class ProcessesController {
   constructor(
     private readonly processesService: ProcessesService

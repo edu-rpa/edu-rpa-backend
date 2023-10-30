@@ -10,13 +10,18 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { 
   Process as ProcessEntity,
 } from 'src/entities/process.entity';
+import { ProcessesValidateService } from './processes-validate.service';
+import { ConnectionModule } from 'src/connection/connection.module';
+import { ActivityPackagesModule } from 'src/activity-packages/activity-packages.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([ProcessEntity]),
     MongooseModule.forFeature([{ name: ProcessDocument.name, schema: ProcessSchema }]),
+    ConnectionModule,
+    ActivityPackagesModule,
   ],
-  providers: [ProcessesService],
+  providers: [ProcessesService, ProcessesValidateService],
   controllers: [ProcessesController]
 })
 export class ProcessesModule {}
