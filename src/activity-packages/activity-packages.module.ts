@@ -9,6 +9,7 @@ import { ActivityPackagesController } from './activity-packages.controller';
     MongooseModule.forFeature([{ name: ActivityPackage.name, schema: ActivityPackageSchema }])
   ],
   providers: [ActivityPackagesService],
+  exports: [ActivityPackagesService],
   controllers: [ActivityPackagesController]
 })
 export class ActivityPackagesModule {}

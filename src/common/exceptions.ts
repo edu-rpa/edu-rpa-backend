@@ -30,6 +30,12 @@ export class UnableToCreateConnectionException extends HttpException {
   }
 }
 
+export class UnableToCreateProcessException extends HttpException {
+  constructor() {
+    super("Unable to create process", 400);
+  }
+}
+
 export class ProcessValidationFailedException extends BadRequestException {
   constructor(description: string) {
     super("Failed to validate process", {

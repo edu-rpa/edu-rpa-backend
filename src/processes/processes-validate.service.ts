@@ -5,7 +5,13 @@ import { ActivityPackage, ActivityTemplate, Argument, ConnectionArgument, Specia
 import { ConnectionService } from 'src/connection/connection.service';
 import { AuthorizationProvider } from 'src/entities/connection.entity';
 import { ActivityPackagesService } from 'src/activity-packages/activity-packages.service';
+import { validate } from 'class-validator';
 
+// TODO:
+// - Validate expression and operator arguments
+// - Validate file arguments
+// - Validate that: browser activities must be inside a browser subprocess
+// - About current item variable in a loop subprocess
 @Injectable()
 export class ProcessesValidateService {
   private activityPackages: ActivityPackage[] = [];
@@ -21,59 +27,15 @@ export class ProcessesValidateService {
   }
 
   async validateProcess(userId: number, processDocument: ProcessDocument) {
-    this.validateType(processDocument);
-    this.validateSingleEntryPoint(processDocument);
-    this.validateFlow(processDocument);
+    await this.isOfRequiredFormat(processDocument);
     await this.validateVariables(userId, processDocument);
     await this.validateActivities(userId, processDocument.activities, processDocument);
   }
 
-  private validateType(processDocument: ProcessDocument) {
-    if (!(processDocument instanceof ProcessDocument)) {
-      throw new ProcessValidationFailedException('Process must be an instance of ProcessDocument');
-    }
-  }
-
-  private validateSingleEntryPoint(processDocument: ProcessDocument) {
-    const entryPoints = processDocument.activities.filter((activity) => activity.prev.length === 0);
-    if (entryPoints.length !== 1) {
-      throw new ProcessValidationFailedException('Process must have exactly one entry point');
-    }
-  }
-
-  private validateFlow(processDocument: ProcessDocument) {
-    const activities = processDocument.activities;
-    const visited = new Set();
-    const queue = [activities[0]];
-
-    while (queue.length > 0) {
-      const activity = queue.shift();
-      if (visited.has(activity.activityId)) {
-        throw new ProcessValidationFailedException('Process must not have cycles');
-      }
-      visited.add(activity.activityId);
-      if (activity.type === TemplateType.GATEWAY) {
-        this.validateFlowGateway(activity);
-      }
-
-      if (typeof activity.next === 'string') {
-        queue.push(activities.find((a) => a.activityId === activity.next));
-      } else {
-        const nextTrueId = activity.next.true;
-        const nextFalseId = activity.next.false;
-        queue.push(activities.find((a) => a.activityId === nextTrueId));
-        queue.push(activities.find((a) => a.activityId === nextFalseId));
-      }
-    }
-
-    if (visited.size !== activities.length) {
-      throw new ProcessValidationFailedException('Process must not have isolated activities');
-    }
-  }
-
-  private validateFlowGateway(activity: Activity) {
-    if (typeof activity.next === 'string') {
-      throw new ProcessValidationFailedException('Gateway must have multiple next activities');
+  private async isOfRequiredFormat(processDocument: ProcessDocument) {
+    const errors = await validate(processDocument);
+    if (errors.length > 0) {
+      throw new ProcessValidationFailedException(errors.toString());
     }
   }
 
@@ -115,6 +77,10 @@ export class ProcessesValidateService {
 
   private getActivityTemplate(activity: Activity) {
     const activityPackage = this.activityPackages.find((p) => p._id === activity.packageId);
+    if (!activityPackage) {
+      throw new ProcessValidationFailedException(`Activity package not found`);
+    }
+
     const activityTemplate = activityPackage.activityTemplates.find((t) => t.templateId === activity.templateId);
     return activityTemplate;
   }
@@ -141,9 +107,6 @@ export class ProcessesValidateService {
       }
     }
 
-    if (activity.type === TemplateType.SUBPROCESS) {
-      await this.validateActivities(userId, activity.body, processDocument);
-    }
   }
 
   private async validateArgument(userId: number, argument: Argument, argumentTemplate: Argument, processDocument: ProcessDocument) {
