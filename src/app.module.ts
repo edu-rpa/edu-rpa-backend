@@ -10,6 +10,7 @@ import { EmailModule } from './email/email.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConnectionModule } from './connection/connection.module';
 import { ActivityPackagesModule } from './activity-packages/activity-packages.module';
+import { ProcessesModule } from './processes/processes.module';
 
 @Module({
   imports: [
@@ -44,6 +45,7 @@ import { ActivityPackagesModule } from './activity-packages/activity-packages.mo
     EmailModule,
     ConnectionModule,
     ActivityPackagesModule,
+    ProcessesModule,
 
   ],
   controllers: [AppController],

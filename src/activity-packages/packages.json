@@ -89,7 +89,7 @@
         "displayName": "If ... then ... else",
         "description": "If a condition is met, then execute a set of activities, otherwise execute another set of activities",
         "iconCode": "AiOutlineBranches",
-        "type": "branch",
+        "type": "gateway",
         "arguments": {
           "Condition": {
             "type": "expression.logic",

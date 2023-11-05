@@ -42,6 +42,18 @@ export class ConnectionService {
     return this.connectionRepository.find({ where });
   }
 
+  async getConnection(userId: number, query: {
+    provider: AuthorizationProvider;
+    name: string;
+  }) {
+    const connection = await this.connectionRepository.findOneBy({
+      userId,
+      provider: AuthorizationProvider[query.provider],
+      name: query.name,
+    });
+    return connection;
+  }
+
   private async checkIfAbleToCreateConnection(createConnectionDto: CreateConnectionDto) {
     if (!createConnectionDto.email) return;
     

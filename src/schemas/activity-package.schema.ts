@@ -1,5 +1,30 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
+import { VariableType } from './process.schema';
+
+export enum TemplateType {
+  ACTIVITY = 'activity',
+  SUBPROCESS = 'subprocess',
+  GATEWAY = 'gateway'
+}
+
+export enum SpecialArgumentType {
+  VARIABLE = 'variable',
+  EXPRESSION_LOGIC = 'expression:logic',
+  EXPRESSION_ARITHMETIC = 'expression:arithmetic',
+  OPERATOR_LOGIC = 'operator:logic',
+  OPERATOR_ARITHMETIC = 'operator:arithmetic'
+}
+
+export type ArgumentType = VariableType | SpecialArgumentType;
+
+export type SubsetExtends<T, U> = {
+  [K in keyof T as T[K] extends U ? K : never]: T[K];
+}
+
+export type SubsetExcludes<T, U> = {
+  [K in keyof T as T[K] extends U ? never : K]: T[K];
+}
 
 @Schema({
   collection: 'packages'
@@ -28,6 +53,7 @@ export class ActivityTemplate {
   displayName: string;
   description: string;
   iconCode: string;
+  type: TemplateType;
   arguments: {
     [argumentName: string]: Argument
   };
@@ -37,46 +63,46 @@ export class ActivityTemplate {
 }
 
 export interface Argument {
-  type: string,
+  type: ArgumentType,
   value: any
 }
 
 export class ConnectionArgument implements Argument {
-  type: `connection.${string}`;
+  type: SubsetExtends<ArgumentType, 'connection'>;
   value: string;
 }
 
 export class VariableArgument implements Argument {
-  type: `variable`;
+  type: SpecialArgumentType.VARIABLE;
   value: string;
 }
 
 export class StringArgument implements Argument {
-  type: 'string';
+  type: VariableType.STRING;
   value: string;
 }
 
 export class NumberArgument implements Argument {
-  type: 'number';
+  type: VariableType.NUMBER;
   value: number;
 }
 
 export class BooleanArgument implements Argument {
-  type: 'boolean';
+  type: VariableType.BOOLEAN;
   value: boolean;
 }
 
 export class FileArgument implements Argument {
-  type: 'file';
+  type: VariableType.FILE;
   value: string;
 }
 
 export class ExpressionArgument implements Argument {
-  type: `expression.${string}`;
+  type: SubsetExtends<ArgumentType, 'expression'>;
   value: any;
 }
 
 export class OperatorArgument implements Argument {
-  type: `operator.${string}`;
+  type: SubsetExtends<ArgumentType, 'operator'>;
   value: string;
 }
