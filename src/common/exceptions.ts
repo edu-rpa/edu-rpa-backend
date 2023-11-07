@@ -44,3 +44,9 @@ export class ProcessValidationFailedException extends BadRequestException {
     });
   }
 }
+
+export class ProcessNotFoundException extends HttpException {
+  constructor() {
+    super("Process not found", 404);
+  }
+}

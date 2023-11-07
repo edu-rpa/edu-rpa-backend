@@ -7,7 +7,7 @@ import { Process as ProcessDocument } from 'src/schemas/process.schema';
 import { Repository } from 'typeorm';
 import { ProcessesValidateService } from './processes-validate.service';
 import { CreateProcessDto } from './dto/create-process.dto';
-import { UnableToCreateProcessException } from 'src/common/exceptions';
+import { UnableToCreateProcessException, ProcessNotFoundException } from 'src/common/exceptions';
 import { UpdateProcessDto } from './dto/update-process.dto';
 import { SaveProcessDto } from './dto/save-process.dto';
 
@@ -65,7 +65,7 @@ export class ProcessesService {
       where: { id: processId, userId },
     });
     if (!process) {
-      return null;
+      throw new ProcessNotFoundException();
     }
     return this.processModel.findById(processId);
   }
@@ -75,7 +75,7 @@ export class ProcessesService {
       where: { id: processId, userId },
     });
     if (!process) {
-      return null;
+      throw new ProcessNotFoundException();
     }
     return this.processRepository.update(processId, updateProcessDto);
   }
@@ -85,7 +85,7 @@ export class ProcessesService {
       where: { id: processId, userId },
     });
     if (!process) {
-      return null;
+      throw new ProcessNotFoundException();
     }
 
     const processDocument = new this.processModel({

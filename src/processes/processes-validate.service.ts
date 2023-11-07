@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Activity, Process as ProcessDocument, VariableType } from 'src/schemas/process.schema';
 import { ProcessValidationFailedException } from 'src/common/exceptions';
-import { ActivityPackage, ActivityTemplate, Argument, ConnectionArgument, SpecialArgumentType, TemplateType } from 'src/schemas/activity-package.schema';
+import { ActivityPackage, ActivityTemplate, Argument, ArgumentType, ConnectionArgument, FileArgument, ScalarArgument, SpecialArgumentType } from 'src/schemas/activity-package.schema';
 import { ConnectionService } from 'src/connection/connection.service';
 import { AuthorizationProvider } from 'src/entities/connection.entity';
 import { ActivityPackagesService } from 'src/activity-packages/activity-packages.service';
@@ -39,17 +39,43 @@ export class ProcessesValidateService {
     }
   }
 
+  private validationMapper(type: ArgumentType) {
+    if (type.startsWith('connection')) {
+      return this.validateConnectionArgument.bind(this);
+    }
+
+    switch (type) {
+      case VariableType.FILE:
+        return this.validateFileArgument.bind(this);
+      case SpecialArgumentType.VARIABLE:
+        return this.validateVariableArgument.bind(this);
+      case VariableType.STRING:
+      case VariableType.NUMBER:
+      case VariableType.BOOLEAN:
+        return this.validateScalarArgument.bind(this);
+      // TODO: add validation cases for other types
+      default:
+        throw new ProcessValidationFailedException(`Argument type ${type} not supported`);
+    }
+  }
+
   private async validateVariables(userId: number, processDocument: ProcessDocument) {
     for (const variableName in processDocument.variables) {
       const variable = processDocument.variables[variableName];
-      if (!variable.isArgument && variable.type.startsWith('connection')) {
-        await this.validateConnectionArgument(userId, { type: variable.type, value: variable.defaultValue });
-      }
-
-      if (!variable.isArgument && variable.type === VariableType.FILE) {
-        await this.validateFileArgument(userId, variable.defaultValue);
-      }
+      if (variable.isArgument) continue;
+      const validate = this.validationMapper(variable.type);
+      await validate(userId, {
+        type: variable.type,
+        value: variable.defaultValue,
+      }, null, processDocument);
     }  
+  }
+
+  private async validateScalarArgument(userId: number, argument: ScalarArgument) {
+    if (argument.type === VariableType.FILE) return this.validateFileArgument(userId, argument as FileArgument);
+    if (typeof argument.value !== argument.type) {
+      throw new ProcessValidationFailedException(`Argument ${argument} is of wrong type`);
+    }
   }
 
   private async validateConnectionArgument(userId: number, connection: ConnectionArgument) {
@@ -64,7 +90,7 @@ export class ProcessesValidateService {
     }
   }
 
-  private async validateFileArgument(userId: number, fileId: string) {
+  private async validateFileArgument(userId: number, file: FileArgument) {
     // TODO: validate file argument after implementing file storage
   }
 
@@ -114,13 +140,8 @@ export class ProcessesValidateService {
       throw new ProcessValidationFailedException(`Argument ${argument} is of wrong type`);
     }
 
-    if (argument.type === SpecialArgumentType.VARIABLE) {
-      await this.validateVariableArgument(userId, argument, argumentTemplate, processDocument);
-    } else if (argument.type.startsWith('connection')) {
-      await this.validateConnectionArgument(userId, argument);
-    } else if (argument.type === VariableType.FILE) {
-      await this.validateFileArgument(userId, argument.value);
-    }
+    const validate = this.validationMapper(argument.type);
+    await validate(userId, argument, argumentTemplate, processDocument);
   }
 
   private async validateVariableArgument(userId: number, argument: Argument, argumentTemplate: Argument, processDocument: ProcessDocument) {

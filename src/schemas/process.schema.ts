@@ -10,12 +10,16 @@ import {
 } from 'class-validator';
 
 export enum VariableType {
-  CONNECTION_DRIVE = 'connection:Google Drive',
+  CONNECTION_DRIVE = 'connection.Google Drive',
   STRING = 'string',
   NUMBER = 'number',
   BOOLEAN = 'boolean',
   FILE = 'file',
-} 
+  LIST = 'list',
+  DICTIONARY = 'dictionary',
+}
+
+export type ScalarType = Extract<VariableType, 'string' | 'number' | 'boolean' | 'file'>;
 
 @Schema({
   minimize: false,
