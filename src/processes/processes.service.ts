@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Model } from 'mongoose';
 import { Process as ProcessEntity } from 'src/entities/process.entity';
-import { Process as ProcessDocument } from 'src/schemas/process.schema';
+import { Process as ProcessDocument, ProcessForValidation } from 'src/schemas/process.schema';
 import { Repository } from 'typeorm';
 import { ProcessesValidateService } from './processes-validate.service';
 import { CreateProcessDto } from './dto/create-process.dto';
@@ -92,7 +92,8 @@ export class ProcessesService {
       _id: processId,
       ...saveProcessDto,
     });
-    await this.processesValidateService.validateProcess(userId, processDocument);
+    const processForValidation = new ProcessForValidation(processDocument);
+    await this.processesValidateService.validateProcess(userId, processForValidation);
 
     await this.processModel.updateOne({ _id: processId }, {
       ...saveProcessDto,

@@ -14,7 +14,7 @@
         "type": "activity",
         "arguments": {
           "Connection": {
-            "type": "connection.drive",
+            "type": "connection.Google Drive",
             "value": null
           },
           "Folder name": {
@@ -44,7 +44,7 @@
         "type": "activity",
         "arguments": {
           "Connection": {
-            "type": "connection.drive",
+            "type": "connection.Google Drive",
             "value": null
           },
           "Files": {
@@ -73,7 +73,7 @@
         "type": "subprocess",
         "arguments": {
           "Connection": {
-            "type": "connection.drive",
+            "type": "connection.Google Drive",
             "value": null
           },
           "Folder Path": {
@@ -92,7 +92,7 @@
         "type": "activity",
         "arguments": {
           "Connection": {
-            "type": "connection.drive",
+            "type": "connection.Google Drive",
             "value": null
           },
           "Folder Path": {
@@ -113,7 +113,7 @@
         "type": "activity",
         "arguments": {
           "Connection": {
-            "type": "connection.drive",
+            "type": "connection.Google Drive",
             "value": null
           },
           "Path": {
@@ -136,7 +136,7 @@
         "type": "activity",
         "arguments": {
           "Connection": {
-            "type": "connection.drive",
+            "type": "connection.Google Drive",
             "value": null
           },
           "Path": {
@@ -155,7 +155,7 @@
         "type": "activity",
         "arguments": {
           "Connection": {
-            "type": "connection.drive",
+            "type": "connection.Google Drive",
             "value": null
           },
           "Source Path": {
@@ -182,7 +182,7 @@
         "type": "activity",
         "arguments": {
           "Connection": {
-            "type": "connection.drive",
+            "type": "connection.Google Drive",
             "value": null
           },
           "Share With": {
@@ -215,7 +215,7 @@
         "type": "activity",
         "arguments": {
           "Connection": {
-            "type": "connection.gmail",
+            "type": "connection.Gmail",
             "value": null
           },
           "to": {
@@ -254,7 +254,7 @@
         "type": "subprocess",
         "arguments": {
           "Connection": {
-            "type": "connection.gmail",
+            "type": "connection.Gmail",
             "value": null
           },
           "Email Folder Path": {
@@ -302,7 +302,7 @@
         "type": "activity",
         "arguments": {
           "Connection": {
-            "type": "connection.gmail",
+            "type": "connection.Gmail",
             "value": null
           },
           "Email Folder Path": {
@@ -352,7 +352,7 @@
         "type": "activity",
         "arguments": {
           "Connection": {
-            "type": "connection.gmail",
+            "type": "connection.Gmail",
             "value": null
           },
 
@@ -382,7 +382,7 @@
         "type": "activity",
         "arguments": {
           "Connection": {
-            "type": "connection.gmail",
+            "type": "connection.Gmail",
             "value": null
           },
           "Email ID": {
@@ -405,7 +405,7 @@
         "type": "activity",
         "arguments": {
           "Connection": {
-            "type": "connection.gmail",
+            "type": "connection.Gmail",
             "value": null
           },
           "Email ID": {
@@ -430,7 +430,7 @@
         "type": "activity",
         "arguments": {
           "Connection": {
-            "type": "connection.gmail",
+            "type": "connection.Gmail",
             "value": null
           },
           "Email ID": {
@@ -465,7 +465,7 @@
         "type": "activity",
         "arguments": {
           "Connection": {
-            "type": "connection.gmail",
+            "type": "connection.Gmail",
             "value": null
           },
           "Email ID": {
@@ -504,7 +504,7 @@
         "type": "activity",
         "arguments": {
           "Connection": {
-            "type": "connection.drive",
+            "type": "connection.Google Drive",
             "value": null
           },
           "Drive Path": {
@@ -530,7 +530,7 @@
         "type": "subprocess",
         "arguments": {
           "Connection": {
-            "type": "connection.sheet",
+            "type": "connection.Google Sheets",
             "value": null
           },
           "SpreadSheet Path": {
@@ -549,7 +549,7 @@
         "type": "activity",
         "arguments": {
           "Connection": {
-            "type": "connection.sheet",
+            "type": "connection.Google Sheets",
             "value": null
           },
           "SpreadSheet Path": {
@@ -570,7 +570,7 @@
         "type": "activity",
         "arguments": {
           "Connection": {
-            "type": "connection.sheet",
+            "type": "connection.Google Sheets",
             "value": null
           },
           "SpreadSheet Path": {
@@ -593,7 +593,7 @@
         "type": "activity",
         "arguments": {
           "Connection": {
-            "type": "connection.sheet",
+            "type": "connection.Google Sheets",
             "value": null
           },
           "SpreadSheet Path": {
@@ -616,7 +616,7 @@
         "type": "activity",
         "arguments": {
           "Connection": {
-            "type": "connection.sheet",
+            "type": "connection.Google Sheets",
             "value": null
           },
           "SpreadSheet Path": {
@@ -643,7 +643,7 @@
         "type": "activity",
         "arguments": {
           "Connection": {
-            "type": "connection.sheet",
+            "type": "connection.Google Sheets",
             "value": null
           },
           "Share With": {
@@ -677,7 +677,7 @@
         "type": "activity",
         "arguments": {
           "Connection": {
-            "type": "connection.sheet",
+            "type": "connection.Google Sheets",
             "value": null
           },
           "SpreadSheet Path": {
@@ -721,7 +721,7 @@
         "type": "activity",
         "arguments": {
           "Connection": {
-            "type": "connection.sheet",
+            "type": "connection.Google Sheets",
             "value": null
           },
           "SpreadSheet Path": {
@@ -759,7 +759,7 @@
         "type": "activity",
         "arguments": {
           "Connection": {
-            "type": "connection.sheet",
+            "type": "connection.Google Sheets",
             "value": null
           },
           "SpreadSheet Path": {

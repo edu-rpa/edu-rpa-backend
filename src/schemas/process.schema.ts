@@ -2,12 +2,15 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 import { ActivityTemplate } from './activity-package.schema';
 import {
-  IsArray,
   IsNotEmpty,
-  IsObject,
   IsString,
-  ValidateNested,
 } from 'class-validator';
+import {
+  IsVariablesOfRequiredFormat
+} from '../processes/decorator/IsVariablesOfRequiredFormat.decorator';
+import {
+  IsActivitiesOfRequiredFormat
+} from '../processes/decorator/IsActivitiesOfRequiredFormat.decorator';
 
 export enum VariableType {
   CONNECTION_DRIVE = 'connection.Google Drive',
@@ -30,34 +33,46 @@ export class Process extends Document {
 
   @Prop({
     required: true,
+    type: String,
   })
-  @IsString()
-  @IsNotEmpty()
-  // TODO: create a custom validator decorator to validate XML
   xml: string;
 
   @Prop({ 
     required: true,
     type: Object, 
   })
-  @IsObject()
-  @IsNotEmpty()
-  @ValidateNested()
-  // TODO: create a custom validator decorator to validate variables
   variables: Variables;
 
   @Prop({ 
     required: true,
     type: [Object],
   })
-  @IsArray()
-  @IsNotEmpty()
-  @ValidateNested()
-  // TODO: create a custom validator decorator to validate activities
   activities: Activity[];
 }
 
 export const ProcessSchema = SchemaFactory.createForClass(Process);
+
+export class ProcessForValidation {
+  constructor(process: Process) {
+    this._id = process._id;
+    this.xml = process.xml;
+    this.variables = process.variables;
+    this.activities = process.activities;
+  }
+
+  _id: number;
+
+  @IsString()
+  @IsNotEmpty()
+  // TODO: create a custom validator decorator to validate XML
+  xml: string;
+
+  @IsVariablesOfRequiredFormat()
+  variables: Variables;
+
+  @IsActivitiesOfRequiredFormat()
+  activities: Activity[];
+}
 
 export interface Variables {
   [variableName: string]: Variable
