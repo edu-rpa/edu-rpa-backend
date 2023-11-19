@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
-import { VariableType } from './process.schema';
+import { ScalarType, VariableType } from './process.schema';
 
 export enum TemplateType {
   ACTIVITY = 'activity',
@@ -10,10 +10,10 @@ export enum TemplateType {
 
 export enum SpecialArgumentType {
   VARIABLE = 'variable',
-  EXPRESSION_LOGIC = 'expression:logic',
-  EXPRESSION_ARITHMETIC = 'expression:arithmetic',
-  OPERATOR_LOGIC = 'operator:logic',
-  OPERATOR_ARITHMETIC = 'operator:arithmetic'
+  EXPRESSION_LOGIC = 'expression.logic',
+  EXPRESSION_ARITHMETIC = 'expression.arithmetic',
+  OPERATOR_LOGIC = 'operator.logic',
+  OPERATOR_ARITHMETIC = 'operator.arithmetic'
 }
 
 export type ArgumentType = VariableType | SpecialArgumentType;
@@ -105,4 +105,21 @@ export class ExpressionArgument implements Argument {
 export class OperatorArgument implements Argument {
   type: SubsetExtends<ArgumentType, 'operator'>;
   value: string;
+}
+
+export abstract class ScalarArgument implements Argument {
+  type: ScalarType;
+  value: any;
+}
+
+export class ListArgument implements Argument {
+  type: VariableType.LIST;
+  value: ScalarArgument[];
+}
+
+export class DictionaryArgument implements Argument {
+  type: VariableType.DICTIONARY;
+  value: {
+    [key: string]: ScalarArgument
+  };
 }

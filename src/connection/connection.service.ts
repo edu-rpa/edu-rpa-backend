@@ -38,8 +38,14 @@ export class ConnectionService {
   }
 
   async getConnections(userId: number, provider?: AuthorizationProvider) {
-    const where = provider? { userId, provider: AuthorizationProvider[provider] } : { userId };
-    return this.connectionRepository.find({ where });
+    let whereString = 'connection.userId = :userId';
+    if (provider) {
+      whereString += ' AND connection.provider = :provider';
+    }
+    return this.connectionRepository.createQueryBuilder('connection')
+      .select(['connection.provider', 'connection.name'])
+      .where(whereString, { userId, provider })
+      .getMany();
   }
 
   async getConnection(userId: number, query: {

@@ -10,42 +10,48 @@
         "displayName": "Create folder",
         "description": "Create a Google Drive folder in a given directory",
         "iconCode": "FaGoogleDrive",
+        "service": "Google Drive",
         "type": "activity",
         "arguments": {
           "Connection": {
-            "type": "connection.drive",
+            "type": "connection.Google Drive",
             "value": null
           },
           "Folder name": {
             "type": "string",
             "value": ""
           },
-          "Parent folder name": {
+          "Parent Folder Path": {
             "type": "string",
             "value": ""
+          },
+          "Overwrite if folder exists": {
+            "type": "boolean",
+            "value": false
           }
         },
         "return": {
-          "folder ID": null,
-          "folder URL": null
+          "Folder ID": null,
+          "Folder URL": null
         }
       },
       {
-        "templateId": "drive.upload_file",
-        "displayName": "Upload file",
-        "description": "Upload a file to a given directory in Google Drive",
+        "templateId": "drive.upload_files",
+        "displayName": "Upload files",
+        "description": "Upload files to a given directory in Google Drive",
         "iconCode": "FaGoogleDrive",
+        "service": "Google Drive",
         "type": "activity",
         "arguments": {
           "Connection": {
-            "type": "connection.drive",
+            "type": "connection.Google Drive",
             "value": null
           },
-          "File": {
-            "type": "file",
-            "value": null
+          "Files": {
+              "type": "list.file",
+              "value": []
           },
-          "Destination folder name": {
+          "Destination Folder Path": {
             "type": "string",
             "value": ""
           },
@@ -55,23 +61,727 @@
           }
         },
         "return": {
-          "file ID": null
+          "List of file uploaded": null
         }
       },
       {
         "templateId": "drive.for_each_file_in_folder",
         "displayName": "For each file in folder",
-        "description": "Execute a set of activities for each file in a given folder in Google Drive",
+        "description": "Iterates over a list of files in a Google Drive folder",
         "iconCode": "FaGoogleDrive",
+        "service": "Google Drive",
         "type": "subprocess",
         "arguments": {
           "Connection": {
-            "type": "connection.drive",
+            "type": "connection.Google Drive",
             "value": null
           },
-          "Folder name": {
+          "Folder Path": {
             "type": "string",
             "value": ""
+          }
+        },
+        "return": null
+      },
+      {
+        "templateId": "drive.get_file_list_in_folder",
+        "displayName": "Get file list in folder",
+        "description": "Get a list of files in a given folder in Google Drive",
+        "iconCode": "FaGoogleDrive",
+        "service": "Google Drive",
+        "type": "activity",
+        "arguments": {
+          "Connection": {
+            "type": "connection.Google Drive",
+            "value": null
+          },
+          "Folder Path": {
+            "type": "string",
+            "value": ""
+          }
+        },
+        "return": {
+          "List of file": null
+        }
+      },
+      {
+        "templateId": "drive.get_file_folder",
+        "displayName": "Get a file/folder",
+        "description": "Get a file/folder in Google Drive",
+        "iconCode": "FaGoogleDrive",
+        "service": "Google Drive",
+        "type": "activity",
+        "arguments": {
+          "Connection": {
+            "type": "connection.Google Drive",
+            "value": null
+          },
+          "Path": {
+            "type": "string",
+            "value": ""
+          }
+        },
+        "return": {
+          "type": null,
+          "id": null,
+          "url": null
+        }
+      },
+      {
+        "templateId": "drive.delete_file_folder",
+        "displayName": "Delete file/folder",
+        "description": "Delete a file/folder in Google Drive",
+        "iconCode": "FaGoogleDrive",
+        "service": "Google Drive",
+        "type": "activity",
+        "arguments": {
+          "Connection": {
+            "type": "connection.Google Drive",
+            "value": null
+          },
+          "Path": {
+            "type": "string",
+            "value": ""
+          }
+        },
+        "return": null
+      },
+      {
+        "templateId": "drive.move_file_folder",
+        "displayName": "Move file/folder",
+        "description": "Move a file/folder to another folder in Google Drive",
+        "iconCode": "FaGoogleDrive",
+        "service": "Google Drive",
+        "type": "activity",
+        "arguments": {
+          "Connection": {
+            "type": "connection.Google Drive",
+            "value": null
+          },
+          "Source Path": {
+            "type": "string",
+            "value": ""
+          },
+          "Destination Path": {
+            "type": "string",
+            "value": ""
+          },
+          "Overwrite if file/folder exists": {
+            "type": "boolean",
+            "value": false
+          }
+        },
+        "return": null
+      },
+      {
+        "templateId": "drive.share_file_folder",
+        "displayName": "Share a file/folder",
+        "description": "Share a file/folder in Google Drive",
+        "iconCode": "FaGoogleDrive",
+        "service": "Google Drive",
+        "type": "activity",
+        "arguments": {
+          "Connection": {
+            "type": "connection.Google Drive",
+            "value": null
+          },
+          "Share With": {
+            "type": "enum.shareWith",
+            "value": "everyone"
+          },
+          "Share with Emails": {
+            "type": "list.email",
+            "value": []
+          },
+          "Permission": {
+            "type": "enum.permission",
+            "value": "view"
+          },
+          "Path": {
+            "type": "string",
+            "value": ""
+          }
+        },
+        "return": {
+          "url": null
+        }
+      },
+      {
+        "templateId": "gmail.send_email",
+        "displayName": "Send email",
+        "description": "Send an email to other people using Gmail",
+        "iconCode": "FaEnvelope",
+        "service": "Gmail",
+        "type": "activity",
+        "arguments": {
+          "Connection": {
+            "type": "connection.Gmail",
+            "value": null
+          },
+          "to": {
+            "type": "list.email",
+            "value": []
+          },
+          "cc": {
+            "type": "list.email",
+            "value": []
+          },
+          "bcc":{
+            "type": "list.email",
+            "value": []
+          },
+          "Subject": {
+            "type": "string",
+            "value": null
+          },
+          "Body": {
+            "type": "string",
+            "value": null
+          },
+          "Attachments": {
+            "type": "list.file",
+            "value": []
+          }
+        },
+        "return": null
+      },
+      {
+        "templateId": "gmail.for_each_email",
+        "displayName": "For each email",
+        "description": "Iterates over a list of email",
+        "iconCode": "FaEnvelope",
+        "service": "Gmail",
+        "type": "subprocess",
+        "arguments": {
+          "Connection": {
+            "type": "connection.Gmail",
+            "value": null
+          },
+          "Email Folder Path": {
+            "type": "string",
+            "value": null
+          },
+          "Filters": {
+            "type": "filter.email",
+            "value": {
+              "Limit": {
+                "type": "number",
+                "value": 100
+              },
+              "From email": {
+                "type": "list.email",
+                "value": []
+              },
+              "Is Starred": {
+                "type": "boolean",
+                "value": false
+              },
+              "Is Read": {
+                "type": "boolean",
+                "value": false
+              },
+              "From date": {
+                "type": "date",
+                "value": null
+              },
+              "To date": {
+                "type": "date",
+                "value": null
+              }
+            }
+          }
+        },
+        "return": null
+      },
+      {
+        "templateId": "gmail.filter_email_list",
+        "displayName": "Filter Email List",
+        "description": "Filter a list of emails by conditions",
+        "iconCode": "FaEnvelope",
+        "service": "Gmail",
+        "type": "activity",
+        "arguments": {
+          "Connection": {
+            "type": "connection.Gmail",
+            "value": null
+          },
+          "Email Folder Path": {
+            "type": "string",
+            "value": null
+          },
+          "Filters": {
+            "type": "filter.email",
+            "value": {
+              "Limit": {
+                "type": "number",
+                "value": 100
+              },
+              "From email": {
+                "type": "list.email",
+                "value": []
+              },
+              "Is Starred": {
+                "type": "boolean",
+                "value": false
+              },
+              "Is Read": {
+                "type": "boolean",
+                "value": false
+              },
+              "From date": {
+                "type": "date",
+                "value": null
+              },
+              "To date": {
+                "type": "date",
+                "value": null
+              }
+            }
+          }
+        },
+        "return": {
+          "Email List": null
+        }
+      },
+      {
+        "templateId": "gmail.get_email_by_id",
+        "displayName": "Get Email By ID",
+        "description": "Retrieves the email with the specified ID",
+        "iconCode": "FaEnvelope",
+        "service": "Gmail",
+        "type": "activity",
+        "arguments": {
+          "Connection": {
+            "type": "connection.Gmail",
+            "value": null
+          },
+
+          "Email ID": {
+            "type": "string",
+            "value": null
+          }
+        },
+        "return": {
+          "id": null,
+          "url": null,
+          "from": null,
+          "to": null,
+          "cc": null,
+          "bcc": null,
+          "Subject": null,
+          "Body": null,
+          "Attachments": null
+        }
+      },
+      {
+        "templateId": "gmail.mark_email_star_unstar",
+        "displayName": "Mark Email as Star/Unstar",
+        "description": "Mark an email as Star/Unstar with the specified ID",
+        "iconCode": "FaEnvelope",
+        "service": "Gmail",
+        "type": "activity",
+        "arguments": {
+          "Connection": {
+            "type": "connection.Gmail",
+            "value": null
+          },
+          "Email ID": {
+            "type": "string",
+            "value": null
+          },
+          "Mark Email as Star": {
+            "type": "boolean",
+            "value": true
+          }
+        },
+        "return": null
+      },
+      {
+        "templateId": "gmail.mark_email_read_unread",
+        "displayName": "Mark Email as Read/Unread",
+        "description": "Mark an email as Read/Unread with the specified ID",
+        "iconCode": "FaEnvelope",
+        "service": "Gmail",
+        "type": "activity",
+        "arguments": {
+          "Connection": {
+            "type": "connection.Gmail",
+            "value": null
+          },
+          "Email ID": {
+            "type": "string",
+            "value": null
+          },
+          "Mark Email as Read": {
+            "type": "boolean",
+            "value": true
+          }
+        },
+        "return": {
+          "message": "Mark Email as Read/Unread successfully!"
+        }
+      },
+      {
+        "templateId": "gmail.reply_email",
+        "displayName": "Reply Email",
+        "description": "Reply an email with the specified ID to other people",
+        "iconCode": "FaEnvelope",
+        "service": "Gmail",
+        "type": "activity",
+        "arguments": {
+          "Connection": {
+            "type": "connection.Gmail",
+            "value": null
+          },
+          "Email ID": {
+            "type": "string",
+            "value": null
+          },
+          "cc": {
+            "type": "list.email",
+            "value": []
+          },
+          "bcc":{
+            "type": "list.email",
+            "value": []
+          },
+          "Body": {
+            "type": "string",
+            "value": null
+          },
+          "Attachments": {
+            "type": "list.file",
+            "value": []
+          }
+        },
+        "return": null
+      },
+      {
+        "templateId": "gmail.forward_email",
+        "displayName": "Forward Email",
+        "description": "Forward an email with the specified ID to other people",
+        "iconCode": "FaEnvelope",
+        "service": "Gmail",
+        "type": "activity",
+        "arguments": {
+          "Connection": {
+            "type": "connection.Gmail",
+            "value": null
+          },
+          "Email ID": {
+            "type": "string",
+            "value": null
+          },
+          "to": {
+            "type": "list.email",
+            "value": []
+          },
+          "cc": {
+            "type": "list.email",
+            "value": []
+          },
+          "bcc":{
+            "type": "list.email",
+            "value": []
+          },
+          "Body": {
+            "type": "string",
+            "value": null
+          },
+          "Attachments": {
+            "type": "list.file",
+            "value": []
+          }
+        },
+        "return": null
+      },
+      {
+        "templateId": "sheet.create_spreadsheet",
+        "displayName": "Create SpreadSheet",
+        "description": "Create SpreadSheet in Google Sheet",
+        "iconCode": "FaFileSpreadsheet",
+        "service": "Google Sheet",
+        "type": "activity",
+        "arguments": {
+          "Connection": {
+            "type": "connection.Google Drive",
+            "value": null
+          },
+          "Drive Path": {
+            "type": "string",
+            "value": null
+          },
+          "SpreadSheet Name": {
+            "type": "string",
+            "value": null
+          }
+        },
+        "return": {
+          "id": null,
+          "url": null
+        }
+      },
+      {
+        "templateId": "sheet.for_each_sheet_in_spreadsheet",
+        "displayName": "For Each Sheet",
+        "description": "Iterates over a list of Sheet in a Spreadsheet",
+        "iconCode": "FaFileSpreadsheet",
+        "service": "Google Sheet",
+        "type": "subprocess",
+        "arguments": {
+          "Connection": {
+            "type": "connection.Google Sheets",
+            "value": null
+          },
+          "SpreadSheet Path": {
+            "type": "string",
+            "value": ""
+          }
+        },
+        "return": null
+      },
+      {
+        "templateId": "sheet.get_sheet_list_in_spreadsheet",
+        "displayName": "Get Sheet List",
+        "description": "Get a list of sheet in given spreadsheet in Google Sheet",
+        "iconCode": "FaFileSpreadsheet",
+        "service": "Google Sheet",
+        "type": "activity",
+        "arguments": {
+          "Connection": {
+            "type": "connection.Google Sheets",
+            "value": null
+          },
+          "SpreadSheet Path": {
+            "type": "string",
+            "value": ""
+          }
+        },
+        "return": {
+          "List of sheet": null
+        }
+      },
+      {
+        "templateId": "sheet.add_sheet",
+        "displayName": "Add sheet",
+        "description": "Add sheet to a given SpreadSheet in Google Sheet",
+        "iconCode": "FaFileSpreadsheet",
+        "service": "Google Sheet",
+        "type": "activity",
+        "arguments": {
+          "Connection": {
+            "type": "connection.Google Sheets",
+            "value": null
+          },
+          "SpreadSheet Path": {
+            "type": "string",
+            "value": ""
+          },
+          "Sheet Name": {
+            "type": "string",
+            "value": ""
+          }
+        },
+        "return": null
+      },
+      {
+        "templateId": "sheet.delete_sheet",
+        "displayName": "Delete sheet",
+        "description": "Delete sheet from a given SpreadSheet in Google Sheet",
+        "iconCode": "FaFileSpreadsheet",
+        "service": "Google Sheet",
+        "type": "activity",
+        "arguments": {
+          "Connection": {
+            "type": "connection.Google Sheets",
+            "value": null
+          },
+          "SpreadSheet Path": {
+            "type": "string",
+            "value": ""
+          },
+          "Sheet Name": {
+            "type": "string",
+            "value": ""
+          }
+        },
+        "return": null
+      },
+      {
+        "templateId": "sheet.rename_sheet",
+        "displayName": "Rename sheet",
+        "description": "Rename sheet of a given SpreadSheet in Google Sheet",
+        "iconCode": "FaFileSpreadsheet",
+        "service": "Google Sheet",
+        "type": "activity",
+        "arguments": {
+          "Connection": {
+            "type": "connection.Google Sheets",
+            "value": null
+          },
+          "SpreadSheet Path": {
+            "type": "string",
+            "value": ""
+          },
+          "Old Sheet Name": {
+            "type": "string",
+            "value": ""
+          },
+          "New Sheet Name": {
+            "type": "string",
+            "value": ""
+          }
+        },
+        "return": null
+      },
+      {
+        "templateId": "sheet.share_spreadsheet",
+        "displayName": "Share a spreadsheet",
+        "description": "Share a spreadsheet in Google Sheet",
+        "iconCode": "FaFileSpreadsheet",
+        "service": "Google Sheet",
+        "type": "activity",
+        "arguments": {
+          "Connection": {
+            "type": "connection.Google Sheets",
+            "value": null
+          },
+          "Share With": {
+            "type": "enum.shareWith",
+            "value": "everyone"
+          },
+          "Share with Emails": {
+            "type": "list.email",
+            "value": []
+          },
+          "Permission": {
+            "type": "enum.permission",
+            "value": "view"
+          },
+          "SpreadSheet Path": {
+            "type": "string",
+            "value": ""
+          }
+        },
+        "return": {
+          "id": null,
+          "url": null
+        }
+      },
+      {
+        "templateId": "sheet.write_data_to_sheet",
+        "displayName": "Write Data To Sheet",
+        "description": "Write Data To Sheet in a given SpreadSheet in Google Sheet",
+        "iconCode": "FaFileSpreadsheet",
+        "service": "Google Sheet",
+        "type": "activity",
+        "arguments": {
+          "Connection": {
+            "type": "connection.Google Sheets",
+            "value": null
+          },
+          "SpreadSheet Path": {
+            "type": "string",
+            "value": ""
+          },
+          "Sheet Name": {
+            "type": "string",
+            "value": ""
+          },
+          "Content": {
+            "type": "string",
+            "value": ""
+          },
+          "Overwrite existed content": {
+            "type": "boolean",
+            "value": true
+          },
+          "Range": {
+            "type": "filter.range",
+            "value": {
+              "From cell": {
+                "type": "string",
+                "value": "A1"
+              },
+              "To cell": {
+                "type": "string",
+                "value": null
+              }
+            }
+          }
+        },
+        "return": null
+      },
+      {
+        "templateId": "sheet.read_data_from_sheet",
+        "displayName": "Read Data From Sheet",
+        "description": "Read Data From Sheet in a given SpreadSheet in Google Sheet",
+        "iconCode": "FaFileSpreadsheet",
+        "service": "Google Sheet",
+        "type": "activity",
+        "arguments": {
+          "Connection": {
+            "type": "connection.Google Sheets",
+            "value": null
+          },
+          "SpreadSheet Path": {
+            "type": "string",
+            "value": ""
+          },
+          "Sheet Name": {
+            "type": "string",
+            "value": ""
+          },
+          "Range": {
+            "type": "filter.range",
+            "value": {
+              "From cell": {
+                "type": "string",
+                "value": "A1"
+              },
+              "To cell": {
+                "type": "string",
+                "value": null
+              }
+            }
+          }
+        },
+        "return": {
+          "content": null
+        }
+      },
+      {
+        "templateId": "sheet.delete_data_from_sheet",
+        "displayName": "Delete Data From Sheet",
+        "description": "Delete Data From Sheet in a given SpreadSheet in Google Sheet",
+        "iconCode": "FaFileSpreadsheet",
+        "service": "Google Sheet",
+        "type": "activity",
+        "arguments": {
+          "Connection": {
+            "type": "connection.Google Sheets",
+            "value": null
+          },
+          "SpreadSheet Path": {
+            "type": "string",
+            "value": ""
+          },
+          "Sheet Name": {
+            "type": "string",
+            "value": ""
+          },
+          "Range": {
+            "type": "filter.range",
+            "value": {
+              "From cell": {
+                "type": "string",
+                "value": "A1"
+              },
+              "To cell": {
+                "type": "string",
+                "value": null
+              }
+            }
           }
         },
         "return": null
@@ -103,8 +813,8 @@
                 "value": ""
               },
               "operator": {
-                "type": "operator.logic",
-                "value": null
+                "type": "enum.operator.logic",
+                "value": "="
               }
             }
           }
@@ -119,8 +829,8 @@
         "type": "subprocess",
         "arguments": {
           "List": {
-            "type": "expression.list",
-            "value": null
+            "type": "list",
+            "value": []
           },
           "Item": {
             "type": "string",
