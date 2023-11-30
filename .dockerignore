@@ -1,0 +1,10 @@
+# Ignore node_modules
+node_modules
+
+# Ignore build output
+dist
+
+# Ignore any local development files
+.env.*
+*.log
+*.swp
