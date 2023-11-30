@@ -1,5 +1,10 @@
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
+export enum AuthenticationProvider {
+  GOOGLE = 'Google',
+  LOCAL = 'Local',
+}
+
 @Entity()
 export class User {
   @PrimaryGeneratedColumn()
@@ -24,7 +29,10 @@ export class User {
   hashedPassword: string;
 
   @Column({
-    default: 'local',
+    nullable: false,
+    type: 'enum',
+    enum: AuthenticationProvider,
+    default: AuthenticationProvider.LOCAL,
   })
   provider: string;
 

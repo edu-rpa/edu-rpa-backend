@@ -12,6 +12,8 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { Otp, OtpSchema } from 'src/schemas/otp.schema';
 import { EmailModule } from 'src/email/email.module';
 import { GoogleStrategy } from './strategy/google.strategy';
+import { GoogleDriveStrategy } from './strategy/google.drive.strategy';
+import { ConnectionModule } from 'src/connection/connection.module';
 
 @Module({
 
@@ -19,6 +21,7 @@ import { GoogleStrategy } from './strategy/google.strategy';
     UsersModule, 
     PassportModule,
     EmailModule,
+    ConnectionModule,
     JwtModule.registerAsync({
       useFactory: (configService: ConfigService) => ({
         secret: configService.get('JWT_SECRET'),
@@ -33,6 +36,7 @@ import { GoogleStrategy } from './strategy/google.strategy';
     AuthService, 
     JwtStrategy,
     GoogleStrategy,
+    GoogleDriveStrategy,
     {
       provide: APP_GUARD,
       useClass: JwtAuthGuard,
