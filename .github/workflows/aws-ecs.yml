@@ -32,7 +32,7 @@ on:
 
 env:
   AWS_REGION: ap-southeast-2                  # set this to your preferred AWS region, e.g. us-west-1
-  ECR_REPOSITORY: edu-rpa-image-repo          # set this to your Amazon ECR repository name
+  ECR_REPOSITORY: edu-rpa-backend             # set this to your Amazon ECR repository name
   ECS_SERVICE: SERVICE-NAME                   # set this to your Amazon ECS service name
   ECS_CLUSTER: edu-rpa-cluster                # set this to your Amazon ECS cluster name
   ECS_TASK_DEFINITION: .aws/task-definition.json # set this to the path to your Amazon ECS task definition
@@ -59,22 +59,19 @@ jobs:
         role-to-assume: arn:aws:iam::678601387840:role/github_actions_ecs
         aws-region: ${{ env.AWS_REGION }}
 
-    - name: Login to Amazon ECR Public
-      id: login-ecr-public
+    - name: Login to Amazon ECR
+      id: login-ecr
       uses: aws-actions/amazon-ecr-login@v2
-      with:
-        registry-type: public
 
-    - name: Build, tag, and push docker image to Amazon ECR Public
+    - name: Build, tag, and push docker image to Amazon ECR
       id: build-image
       env:
-        REGISTRY: ${{ steps.login-ecr-public.outputs.registry }}
-        REGISTRY_ALIAS: f6v6y2u8
+        REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         IMAGE_TAG: ${{ github.sha }}
       run: |
-          docker build -t $REGISTRY/$REGISTRY_ALIAS/$ECR_REPOSITORY:$IMAGE_TAG .
-          docker push $REGISTRY/$REGISTRY_ALIAS/$ECR_REPOSITORY:$IMAGE_TAG
-          echo "image=$REGISTRY/$REGISTRY_ALIAS/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_ENV
+          docker build -t $REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+          docker push $REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          echo "image=$REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_ENV
 
     - name: Fill in the new image ID in the Amazon ECS task definition
       id: task-def
