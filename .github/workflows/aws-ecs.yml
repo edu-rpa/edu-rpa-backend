@@ -39,6 +39,8 @@ env:
                                                  # file, e.g. .aws/task-definition.json
   CONTAINER_NAME: backend                     # set this to the name of the container in the
                                               # containerDefinitions section of your task definition
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
 permissions:
   contents: read
