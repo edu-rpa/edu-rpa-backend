@@ -28,7 +28,7 @@ export class ConnectionService {
   async createConnection(createConnectionDto: CreateConnectionDto) {
     await this.checkIfAbleToCreateConnection(createConnectionDto);
     const connection = await this.connectionRepository.save({
-      provider: AuthorizationProvider[createConnectionDto.provider],
+      provider: createConnectionDto.provider,
       userId: createConnectionDto.fromUser,
       name: createConnectionDto.email? createConnectionDto.email : Date.now().toString(),
       accessToken: createConnectionDto.accessToken,
@@ -64,7 +64,7 @@ export class ConnectionService {
     if (!createConnectionDto.email) return;
     
     const existingConnection = await this.connectionRepository.findOneBy({
-      provider: AuthorizationProvider[createConnectionDto.provider],
+      provider: createConnectionDto.provider,
       userId: createConnectionDto.fromUser,
       name: createConnectionDto.email,
     });
