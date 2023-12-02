@@ -11,6 +11,8 @@ import { User } from 'src/entities/user.entity';
 import { GoogleDriveOauthGuard } from './guard/google-drive-oath.guard';
 import { UserTokenFromProvider } from 'src/connection/connection.service';
 import { AuthorizationProvider } from 'src/entities/connection.entity';
+import { GmailOauthGuard } from './guard/gmail-oath.guard';
+import { GoogleSheetsOauthGuard } from './guard/google-sheets-oath.guard';
 
 @Controller('auth')
 @ApiTags('auth')
@@ -113,5 +115,27 @@ export class AuthController {
   async googleDriveAuthRedirect(@UserDecor() userToken: UserTokenFromProvider, @Query('state') state: string) {
     await this.authService.authorizeUserFromProvider(userToken, state, AuthorizationProvider.G_DRIVE);
     return 'Authorized Google Drive successfully';
+  }
+
+  @Get('gmail')
+  @UseGuards(GmailOauthGuard)
+  async gmailAuth() {}
+
+  @Get('gmail/callback')
+  @UseGuards(GmailOauthGuard)
+  async gmailAuthRedirect(@UserDecor() userToken: UserTokenFromProvider, @Query('state') state: string) {
+    await this.authService.authorizeUserFromProvider(userToken, state, AuthorizationProvider.G_GMAIL);
+    return 'Authorized Gmail successfully';
+  }
+
+  @Get('sheets')
+  @UseGuards(GoogleSheetsOauthGuard)
+  async googleSheetsAuth() {}
+
+  @Get('sheets/callback')
+  @UseGuards(GoogleSheetsOauthGuard)
+  async googleSheetsAuthRedirect(@UserDecor() userToken: UserTokenFromProvider, @Query('state') state: string) {
+    await this.authService.authorizeUserFromProvider(userToken, state, AuthorizationProvider.G_SHEETS);
+    return 'Authorized Google Sheets successfully';
   }
 }

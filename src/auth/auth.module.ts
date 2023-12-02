@@ -14,6 +14,8 @@ import { EmailModule } from 'src/email/email.module';
 import { GoogleStrategy } from './strategy/google.strategy';
 import { GoogleDriveStrategy } from './strategy/google.drive.strategy';
 import { ConnectionModule } from 'src/connection/connection.module';
+import { GmailStrategy } from './strategy/gmail.strategy';
+import { GoogleSheetsStrategy } from './strategy/google.sheets.strategy';
 
 @Module({
 
@@ -37,6 +39,8 @@ import { ConnectionModule } from 'src/connection/connection.module';
     JwtStrategy,
     GoogleStrategy,
     GoogleDriveStrategy,
+    GmailStrategy,
+    GoogleSheetsStrategy,
     {
       provide: APP_GUARD,
       useClass: JwtAuthGuard,
