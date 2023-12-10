@@ -88,6 +88,78 @@
         }
       },
       {
+        "templateId": "drive.download_files",
+        "displayName": "Download files",
+        "description": "Download a list of files from Google Drive to robot's file system",
+        "iconCode": "FaGoogleDrive",
+        "service": "Google Drive",
+        "type": "activity",
+        "keyword": "Download Drive Files",
+        "arguments": {
+          "Connection": {
+            "type": "connection.Google Drive",
+            "value": null
+          },
+          "Folder Path": {
+            "type": "string",
+            "keywordArg": "source",
+            "value": ""
+          },
+          "Query": {
+            "type": "string",
+            "keywordArg": "query",
+            "value": ""
+          }
+        },
+        "return": {
+          "displayName": "File name list",
+          "assignedTo": null,
+          "type": "list",
+          "description": "A list of downloaded file names"
+        }
+      },
+      {
+        "templateId": "drive.upload_file",
+        "displayName": "Upload file",
+        "description": "Upload a file from robot's file system to Google Drive",
+        "iconCode": "FaGoogleDrive",
+        "service": "Google Drive",
+        "type": "activity",
+        "keyword": "Upload Drive File",
+        "arguments": {
+          "Connection": {
+            "type": "connection.Google Drive",
+            "value": null
+          },
+          "File name": {
+            "type": "string",
+            "keywordArg": "filename",
+            "value": ""
+          },
+          "Folder Path": {
+            "type": "string",
+            "keywordArg": "folder",
+            "value": ""
+          },
+          "Overwrite": {
+            "type": "boolean",
+            "keywordArg": "overwrite",
+            "value": false
+          },
+          "Make Folder": {
+            "type": "boolean",
+            "keywordArg": "make_dir",
+            "value": false
+          }
+        },
+        "return": {
+          "displayName": "File id",
+          "assignedTo": null,
+          "type": "string",
+          "description": "The uploaded file id"
+        }
+      },
+      {
         "templateId": "drive.get_file_folder",
         "displayName": "Get a file/folder",
         "description": "Get a file/folder in Google Drive",
@@ -592,6 +664,27 @@
     "iconCode": "MdControlCamera",
     "activityTemplates": [
       {
+        "templateId": "append_to_list",
+        "displayName": "Append to list",
+        "description": "Append an item to a list",
+        "iconCode": "FaListUl",
+        "type": "activity",
+        "keyword": "Append To List",
+        "arguments": {
+          "List": {
+            "type": "variable",
+            "keywordArg": "list_",
+            "value": null
+          },
+          "Item": {
+            "type": "any",
+            "keywordArg": "values",
+            "value": null
+          }
+        },
+        "return": null
+      },
+      {
         "templateId": "if",
         "displayName": "If ... then ... else",
         "description": "If a condition is met, then execute a set of activities, otherwise execute another set of activities",
@@ -736,6 +829,65 @@
     "displayName": "Document automation",
     "description": "Help you automate tasks related to documents (traditional paper documents or digital documents like PDFs) with the help of AI",
     "iconCode": "FaFileAlt",
-    "activityTemplates": []
+    "library": "EduRPA.Document",
+    "activityTemplates": [
+      {
+        "templateId": "extract_data_from_document",
+        "displayName": "Extract data from document",
+        "description": "Extract data from a document (like an image) using AI",
+        "iconCode": "FaFileAlt",
+        "type": "activity",
+        "keyword": "Extract Data From Document",
+        "arguments": {
+          "File name (downloaded)": {
+            "type": "string",
+            "keywordArg": "file_name",
+            "value": ""
+          },
+          "Document template": {
+            "type": "dictionary",
+            "keywordArg": "template",
+            "value": {}
+          }
+        },
+        "return": {
+          "displayName": "Data",
+          "assignedTo": null,
+          "type": "dictionary",
+          "description": "The extracted data. This is a dictionary, with keys are the field names, values are the field values"
+        }
+      },
+      {
+        "templateId": "create_grade_report_file",
+        "displayName": "Create grade report file",
+        "description": "Create a grade report file from a given correct answer and actual answers of students",
+        "iconCode": "FaFileAlt",
+        "type": "activity",
+        "keyword": "Create Grade Report File",
+        "arguments": {
+          "Correct Answer": {
+            "type": "dictionary",
+            "keywordArg": "correct_answer",
+            "value": {}
+          },
+          "Actual Answers": {
+            "type": "list",
+            "keywordArg": "actual_answers",
+            "value": []
+          },
+          "File names": {
+            "type": "list",
+            "keywordArg": "file_names",
+            "value": []
+          }
+        },
+        "return": {
+          "displayName": "File name",
+          "assignedTo": null,
+          "type": "string",
+          "description": "The generated grade report file name"
+        }
+      }
+    ]
   }
 ]
