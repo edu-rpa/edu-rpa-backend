@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
-import { ScalarType, VariableType } from './process.schema';
+import { ScalarType, VariableType } from 'src/processes/schema/process.schema';
 
 export enum TemplateType {
   ACTIVITY = 'activity',

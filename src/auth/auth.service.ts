@@ -1,19 +1,19 @@
 import { Injectable } from '@nestjs/common';
-import { User } from 'src/entities/user.entity';
+import { User } from 'src/users/entity/user.entity';
 import { UsersService } from 'src/users/users.service';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { InjectModel } from '@nestjs/mongoose';
-import { Otp } from 'src/schemas/otp.schema';
+import { Otp } from 'src/auth/schema/otp.schema';
 import { Model } from 'mongoose';
 import * as speakeasy from 'speakeasy';
 import { CannotRequestOtpException, EmailAlreadyExistsException, InvalidOtpException, InvalidStateException } from 'src/common/exceptions';
 import { EmailService } from 'src/email/email.service';
 import { ResendOtpDto, VerifyOtpDto } from './dto/otp.dto';
 import { ConnectionService, UserTokenFromProvider } from 'src/connection/connection.service';
-import { AuthorizationProvider } from 'src/entities/connection.entity';
+import { AuthorizationProvider } from 'src/connection/entity/connection.entity';
 
 @Injectable()
 export class AuthService {

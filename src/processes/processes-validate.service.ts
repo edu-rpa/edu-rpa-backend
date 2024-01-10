@@ -1,9 +1,18 @@
 import { Injectable } from '@nestjs/common';
-import { Activity, VariableType, ProcessForValidation, Variables } from 'src/schemas/process.schema';
+import { Activity, VariableType, ProcessForValidation, Variables } from 'src/processes/schema/process.schema';
 import { ProcessValidationFailedException } from 'src/common/exceptions';
-import { ActivityPackage, ActivityTemplate, Argument, ArgumentType, ConnectionArgument, FileArgument, ScalarArgument, SpecialArgumentType } from 'src/schemas/activity-package.schema';
+import { 
+  ActivityPackage, 
+  ActivityTemplate, 
+  Argument, 
+  ArgumentType, 
+  ConnectionArgument, 
+  FileArgument, 
+  ScalarArgument, 
+  SpecialArgumentType 
+} from 'src/activity-packages/schema/activity-package.schema';
 import { ConnectionService } from 'src/connection/connection.service';
-import { AuthorizationProvider } from 'src/entities/connection.entity';
+import { AuthorizationProvider } from 'src/connection/entity/connection.entity';
 import { ActivityPackagesService } from 'src/activity-packages/activity-packages.service';
 import { validate } from 'class-validator';
 

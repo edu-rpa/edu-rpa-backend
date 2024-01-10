@@ -5,11 +5,11 @@ import { MongooseModule } from '@nestjs/mongoose';
 import {
   Process as ProcessDocument, 
   ProcessSchema 
-} from 'src/schemas/process.schema';
+} from 'src/processes/schema/process.schema';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { 
   Process as ProcessEntity,
-} from 'src/entities/process.entity';
+} from 'src/processes/entity/process.entity';
 import { ProcessesValidateService } from './processes-validate.service';
 import { ConnectionModule } from 'src/connection/connection.module';
 import { ActivityPackagesModule } from 'src/activity-packages/activity-packages.module';

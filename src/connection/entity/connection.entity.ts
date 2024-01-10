@@ -1,5 +1,5 @@
 import { Entity, Column, ManyToOne, PrimaryColumn } from 'typeorm';
-import { User } from './user.entity';
+import { User } from '../../users/entity/user.entity';
 
 export enum AuthorizationProvider {
   G_DRIVE = 'Google Drive',

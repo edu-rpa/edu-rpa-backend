@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UnableToCreateConnectionException } from 'src/common/exceptions';
-import { Connection, AuthorizationProvider } from 'src/entities/connection.entity';
+import { Connection, AuthorizationProvider } from 'src/connection/entity/connection.entity';
 import { Repository } from 'typeorm';
 
 export interface UserTokenFromProvider {

@@ -1,16 +1,16 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
-import { ActivityTemplate } from './activity-package.schema';
+import { ActivityTemplate } from 'src/activity-packages/schema/activity-package.schema';
 import {
   IsNotEmpty,
   IsString,
 } from 'class-validator';
 import {
   IsVariablesOfRequiredFormat
-} from '../processes/decorator/IsVariablesOfRequiredFormat.decorator';
+} from '../decorator/IsVariablesOfRequiredFormat.decorator';
 import {
   IsActivitiesOfRequiredFormat
-} from '../processes/decorator/IsActivitiesOfRequiredFormat.decorator';
+} from '../decorator/IsActivitiesOfRequiredFormat.decorator';
 
 export enum VariableType {
   CONNECTION_DRIVE = 'connection.Google Drive',

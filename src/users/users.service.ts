@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { AuthenticationProvider, User } from '../entities/user.entity';
+import { AuthenticationProvider, User } from './entity/user.entity';
 import { Repository } from 'typeorm';
 import { EmailAlreadyExistsException } from 'src/common/exceptions';
 

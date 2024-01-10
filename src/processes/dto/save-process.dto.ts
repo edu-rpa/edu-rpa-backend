@@ -1,5 +1,5 @@
 import { IsObject, IsString, IsArray, IsNotEmpty } from 'class-validator';
-import { Activity, Variables } from 'src/schemas/process.schema';
+import { Activity, Variables } from 'src/processes/schema/process.schema';
 
 export class SaveProcessDto {
   @IsString()
