@@ -11,12 +11,18 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { ConnectionModule } from './connection/connection.module';
 import { ActivityPackagesModule } from './activity-packages/activity-packages.module';
 import { ProcessesModule } from './processes/processes.module';
+import { resolve } from 'path';
+
+const ENV_FILE_PATH = process.env.NODE_ENV === 'production' ? 
+  resolve(__dirname, '../env/.env.production') : 
+  resolve(__dirname, '../env/.env');
 
 @Module({
   imports: [
 
     ConfigModule.forRoot({
       isGlobal: true,
+      envFilePath: ENV_FILE_PATH,
     }),
 
     TypeOrmModule.forRootAsync({
