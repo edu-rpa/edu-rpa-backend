@@ -9,7 +9,7 @@ import { JwtStrategy } from './strategy/jwt.strategy';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './guard/jwt-auth.guard';
 import { MongooseModule } from '@nestjs/mongoose';
-import { Otp, OtpSchema } from 'src/schemas/otp.schema';
+import { Otp, OtpSchema } from 'src/auth/schema/otp.schema';
 import { EmailModule } from 'src/email/email.module';
 import { GoogleStrategy } from './strategy/google.strategy';
 import { GoogleDriveStrategy } from './strategy/google.drive.strategy';

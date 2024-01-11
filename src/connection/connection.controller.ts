@@ -2,7 +2,7 @@ import { Controller, Get, Query } from '@nestjs/common';
 import { ConnectionService } from './connection.service';
 import { UserDecor } from 'src/common/decorators/user.decorator';
 import { UserPayload } from 'src/auth/strategy/jwt.strategy';
-import { AuthorizationProvider } from 'src/entities/connection.entity';
+import { AuthorizationProvider } from 'src/connection/entity/connection.entity';
 import { ApiTags } from '@nestjs/swagger';
 
 @Controller('connection')

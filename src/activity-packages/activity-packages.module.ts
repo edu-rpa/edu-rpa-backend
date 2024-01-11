@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ActivityPackagesService } from './activity-packages.service';
 import { MongooseModule } from '@nestjs/mongoose';
-import { ActivityPackage, ActivityPackageSchema } from 'src/schemas/activity-package.schema';
+import { ActivityPackage, ActivityPackageSchema } from './schema/activity-package.schema';
 import { ActivityPackagesController } from './activity-packages.controller';
 
 @Module({

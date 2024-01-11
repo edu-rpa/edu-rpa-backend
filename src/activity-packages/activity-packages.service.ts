@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { ActivityPackage } from 'src/schemas/activity-package.schema';
+import { ActivityPackage } from './schema/activity-package.schema';
 
 @Injectable()
 export class ActivityPackagesService {

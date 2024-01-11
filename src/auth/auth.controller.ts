@@ -7,10 +7,10 @@ import { LoginDto } from './dto/login.dto';
 import { ResendOtpDto, VerifyOtpDto } from './dto/otp.dto';
 import { GoogleOauthGuard } from './guard/google-oauth.guard';
 import { UserDecor } from 'src/common/decorators/user.decorator';
-import { User } from 'src/entities/user.entity';
+import { User } from 'src/users/entity/user.entity';
 import { GoogleDriveOauthGuard } from './guard/google-drive-oath.guard';
 import { UserTokenFromProvider } from 'src/connection/connection.service';
-import { AuthorizationProvider } from 'src/entities/connection.entity';
+import { AuthorizationProvider } from 'src/connection/entity/connection.entity';
 import { GmailOauthGuard } from './guard/gmail-oath.guard';
 import { GoogleSheetsOauthGuard } from './guard/google-sheets-oath.guard';
 
