@@ -50,3 +50,9 @@ export class ProcessNotFoundException extends HttpException {
     super("Process not found", 404);
   }
 }
+
+export class DocumentTemplateNotFoundException extends HttpException {
+  constructor() {
+    super("Document template not found", 404);
+  }
+}
