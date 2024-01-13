@@ -29,7 +29,7 @@ export type ScalarType = Extract<VariableType, 'string' | 'number' | 'boolean' |
 })
 export class Process extends Document {
   @Prop()
-  _id: number;
+  _id: string;
 
   @Prop({
     required: true,
@@ -60,7 +60,7 @@ export class ProcessForValidation {
     this.activities = process.activities;
   }
 
-  _id: number;
+  _id: string;
 
   @IsString()
   @IsNotEmpty()

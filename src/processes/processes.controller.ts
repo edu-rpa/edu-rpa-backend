@@ -33,6 +33,9 @@ export class ProcessesController {
     schema: {
       type: 'object',
       properties: {
+        id: {
+          type: 'string',
+        },
         name: {
           type: 'string',
         },
@@ -55,7 +58,7 @@ export class ProcessesController {
   @Get('/:id')
   async getProcess(
     @UserDecor() user: UserPayload,
-    @Param('id') processId: number
+    @Param('id') processId: string
   ) {
     return await this.processesService.getProcess(user.id, processId);
   }
@@ -76,7 +79,7 @@ export class ProcessesController {
   })
   async updateProcess(
     @UserDecor() user: UserPayload,
-    @Param('id') processId: number,
+    @Param('id') processId: string,
     @Body() updateProcessDto: UpdateProcessDto
   ) {
     return await this.processesService.updateProcess(user.id, processId, updateProcessDto);
@@ -101,7 +104,7 @@ export class ProcessesController {
   })
   async saveProcess(
     @UserDecor() user: UserPayload,
-    @Param('id') processId: number,
+    @Param('id') processId: string,
     @Body() saveProcessDto: SaveProcessDto
   ) {
     return await this.processesService.saveProcess(user.id, processId, saveProcessDto);
@@ -110,7 +113,7 @@ export class ProcessesController {
   @Delete('/:id')
   async deleteProcess(
     @UserDecor() user: UserPayload,
-    @Param('id') processId: number
+    @Param('id') processId: string
   ) {
     return await this.processesService.deleteProcess(user.id, processId);
   }
