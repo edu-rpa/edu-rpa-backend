@@ -2,6 +2,9 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
+import { ActivityPackage } from './activity-packages/schema/activity-package.schema';
+import { DocumentTemplateDetail } from './document-template/schema/document-template.schema';
+import { ProcessDetail } from './processes/schema/process.schema';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -17,7 +20,9 @@ async function bootstrap() {
     .addBearerAuth()
     .addOAuth2()
     .build();
-  const document = SwaggerModule.createDocument(app, config);
+  const document = SwaggerModule.createDocument(app, config, {
+    extraModels: [ActivityPackage, DocumentTemplateDetail, ProcessDetail],
+  });
   SwaggerModule.setup('api', app, document);
 
   app.useGlobalPipes(

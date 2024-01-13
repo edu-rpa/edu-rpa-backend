@@ -26,8 +26,9 @@ export type ScalarType = Extract<VariableType, 'string' | 'number' | 'boolean' |
 
 @Schema({
   minimize: false,
+  collection: 'processes',
 })
-export class Process extends Document {
+export class ProcessDetail extends Document {
   @Prop()
   _id: string;
 
@@ -50,14 +51,14 @@ export class Process extends Document {
   activities: Activity[];
 }
 
-export const ProcessSchema = SchemaFactory.createForClass(Process);
+export const ProcessDetailSchema = SchemaFactory.createForClass(ProcessDetail);
 
 export class ProcessForValidation {
-  constructor(process: Process) {
-    this._id = process._id;
-    this.xml = process.xml;
-    this.variables = process.variables;
-    this.activities = process.activities;
+  constructor(processDetail: ProcessDetail) {
+    this._id = processDetail._id;
+    this.xml = processDetail.xml;
+    this.variables = processDetail.variables;
+    this.activities = processDetail.activities;
   }
 
   _id: string;
@@ -84,7 +85,25 @@ export interface Variable {
   defaultValue: any, 
 }
 
-export class Activity extends ActivityTemplate {
-  activityId: string;
-  packageId: string;
+// NOTE: the schema is set based on what is stored in the browser's local storage. It will be changed later.
+export class Activity {
+  activityID: string;
+  activityType: string;
+  properties: ActivityProperties;
+}
+
+export class ActivityProperties {
+  activityPackage: string;
+  serviceName: string;
+  activityName: string;
+  library: string;
+  arguments: ActivityArguments;
+  return: any;
+}
+
+export class ActivityArguments {
+  [argumentName: string]: {
+    keywordArg: string;
+    value: any;
+  };
 }

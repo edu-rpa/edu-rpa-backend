@@ -2,10 +2,11 @@ import { Body, Controller, Delete, Get, Post, Put, Query, Param } from '@nestjs/
 import { ProcessesService } from './processes.service';
 import { UserDecor } from 'src/common/decorators/user.decorator';
 import { UserPayload } from 'src/auth/strategy/jwt.strategy';
-import { ApiBody, ApiTags, ApiBearerAuth, ApiQuery } from '@nestjs/swagger';
+import { ApiBody, ApiTags, ApiBearerAuth, ApiQuery, ApiResponse, getSchemaPath } from '@nestjs/swagger';
 import { CreateProcessDto } from './dto/create-process.dto';
 import { UpdateProcessDto } from './dto/update-process.dto';
 import { SaveProcessDto } from './dto/save-process.dto';
+import { ProcessDetail } from './schema/process.schema';
 
 @Controller('processes')
 @ApiTags('processes')
@@ -40,6 +41,13 @@ export class ProcessesController {
   }
 
   @Get('/:id')
+  @ApiResponse({
+    status: 200,
+    description: 'The process detail',
+    schema: {
+      $ref: getSchemaPath(ProcessDetail),
+    },
+  })
   async getProcess(
     @UserDecor() user: UserPayload,
     @Param('id') processId: string

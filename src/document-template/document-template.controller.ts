@@ -1,11 +1,12 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
-import { ApiBody, ApiTags, ApiBearerAuth, ApiQuery } from '@nestjs/swagger';
+import { ApiBody, ApiTags, ApiBearerAuth, ApiQuery, ApiResponse, getSchemaPath } from '@nestjs/swagger';
 import { DocumentTemplateService } from './document-template.service';
 import { UserDecor } from 'src/common/decorators/user.decorator';
 import { UserPayload } from 'src/auth/strategy/jwt.strategy';
 import { CreateDocumentTemplateDto } from './dto/create-document-template.dto';
 import { UpdateDocumentTemplateDto } from './dto/update-document-template.dto';
 import { SaveDocumentTemplateDto } from './dto/save-document-template.dto';
+import { DocumentTemplateDetail } from './schema/document-template.schema';
 
 @Controller('document-template')
 @ApiTags('document-template')
@@ -40,6 +41,13 @@ export class DocumentTemplateController {
   }
 
   @Get('/:id')
+  @ApiResponse({
+    status: 200,
+    description: 'The document template detail',
+    schema: {
+      $ref: getSchemaPath(DocumentTemplateDetail),
+    },
+  })
   async getDocumentTemplate(
     @UserDecor() user: UserPayload,
     @Param('id') documentTemplateId: string

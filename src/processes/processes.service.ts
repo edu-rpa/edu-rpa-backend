@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Model } from 'mongoose';
-import { Process as ProcessEntity } from 'src/processes/entity/process.entity';
-import { Process as ProcessDocument, ProcessForValidation } from 'src/processes/schema/process.schema';
+import { Process } from 'src/processes/entity/process.entity';
+import { ProcessDetail, ProcessForValidation } from 'src/processes/schema/process.schema';
 import { Repository } from 'typeorm';
 import { ProcessesValidateService } from './processes-validate.service';
 import { CreateProcessDto } from './dto/create-process.dto';
@@ -14,10 +14,10 @@ import { SaveProcessDto } from './dto/save-process.dto';
 @Injectable()
 export class ProcessesService {
   constructor(
-    @InjectRepository(ProcessEntity)
-    private processRepository: Repository<ProcessEntity>,
-    @InjectModel(ProcessDocument.name) 
-    private processModel: Model<ProcessDocument>,
+    @InjectRepository(Process)
+    private processRepository: Repository<Process>,
+    @InjectModel(ProcessDetail.name) 
+    private processDetailModel: Model<ProcessDetail>,
     private readonly processesValidateService: ProcessesValidateService,
   ) {}
 
@@ -43,7 +43,7 @@ export class ProcessesService {
       userId,
     });
 
-    const processDocument = new this.processModel({
+    const processDetail = new this.processDetailModel({
       _id: processEntity.id,
       xml: createProcessDto.xml,
       variables: {},
@@ -51,12 +51,12 @@ export class ProcessesService {
     });
 
     try {
-      await processDocument.save();
+      await processDetail.save();
     } catch (error) {
       await this.processRepository.delete(processEntity.id);
       throw new UnableToCreateProcessException();
     }
-    return processDocument;
+    return processDetail;
   }
 
   async getProcess(userId: number, processId: string) {
@@ -66,7 +66,7 @@ export class ProcessesService {
     if (!process) {
       throw new ProcessNotFoundException();
     }
-    return this.processModel.findById(processId);
+    return this.processDetailModel.findById(processId);
   }
 
   async updateProcess(userId: number, processId: string, updateProcessDto: UpdateProcessDto) {
@@ -87,14 +87,15 @@ export class ProcessesService {
       throw new ProcessNotFoundException();
     }
 
-    const processDocument = new this.processModel({
-      _id: processId,
-      ...saveProcessDto,
-    });
-    const processForValidation = new ProcessForValidation(processDocument);
-    await this.processesValidateService.validateProcess(userId, processForValidation);
+    // NOTE: disable validation temporarily
+    // const processDetail = new this.processDetailModel({
+    //   _id: processId,
+    //   ...saveProcessDto,
+    // });
+    // const processForValidation = new ProcessForValidation(processDetail);
+    // await this.processesValidateService.validateProcess(userId, processForValidation);
 
-    await this.processModel.updateOne({ _id: processId }, {
+    await this.processDetailModel.updateOne({ _id: processId }, {
       ...saveProcessDto,
     });
     return this.processRepository.update(processId, {
@@ -110,7 +111,7 @@ export class ProcessesService {
     if (!process) {
       return null;
     }
-    await this.processModel.deleteOne({ _id: processId });
+    await this.processDetailModel.deleteOne({ _id: processId });
     return this.processRepository.delete(processId);
   }
 }

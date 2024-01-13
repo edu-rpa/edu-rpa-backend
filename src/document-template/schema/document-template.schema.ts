@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 
-export interface Rectangle {
+export class Rectangle {
   left: number;
   top: number;
   right: number;
@@ -9,8 +9,10 @@ export interface Rectangle {
   label?: string;
 };
 
-@Schema()
-export class DocumentTemplate extends Document {
+@Schema({
+  collection: 'document_templates'
+})
+export class DocumentTemplateDetail extends Document {
   @Prop()
   _id: string;
 
@@ -18,4 +20,4 @@ export class DocumentTemplate extends Document {
   dataTemplate: Rectangle[];
 }
 
-export const DocumentTemplateSchema = SchemaFactory.createForClass(DocumentTemplate);
+export const DocumentTemplateDetailSchema = SchemaFactory.createForClass(DocumentTemplateDetail);

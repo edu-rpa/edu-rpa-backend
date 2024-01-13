@@ -27,7 +27,7 @@ export type SubsetExcludes<T, U> = {
 }
 
 @Schema({
-  collection: 'packages'
+  collection: 'activity_packages'
 })
 export class ActivityPackage extends Document {
   @Prop()
