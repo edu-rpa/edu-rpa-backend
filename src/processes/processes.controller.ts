@@ -29,25 +29,6 @@ export class ProcessesController {
   }
 
   @Post()
-  @ApiBody({
-    schema: {
-      type: 'object',
-      properties: {
-        id: {
-          type: 'string',
-        },
-        name: {
-          type: 'string',
-        },
-        description: {
-          type: 'string',
-        },
-        xml: {
-          type: 'string',
-        },
-      },
-    },
-  })
   async createProcess(
     @UserDecor() user: UserPayload,
     @Body() createProcessDto: CreateProcessDto
@@ -64,19 +45,6 @@ export class ProcessesController {
   }
 
   @Put('/:id')
-  @ApiBody({
-    schema: {
-      type: 'object',
-      properties: {
-        name: {
-          type: 'string',
-        },
-        description: {
-          type: 'string',
-        },
-      },
-    },
-  })
   async updateProcess(
     @UserDecor() user: UserPayload,
     @Param('id') processId: string,
@@ -86,22 +54,6 @@ export class ProcessesController {
   }
 
   @Put('/:id/save')
-  @ApiBody({
-    schema: {
-      type: 'object',
-      properties: {
-        xml: {
-          type: 'string',
-        },
-        variables: {
-          type: 'object',
-        },
-        activities: {
-          type: 'array',
-        },
-      },
-    },
-  })
   async saveProcess(
     @UserDecor() user: UserPayload,
     @Param('id') processId: string,
