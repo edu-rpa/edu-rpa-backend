@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DocumentTemplate as DocumentTemplateEntity } from './entity/document-template.entity';
+import { DocumentTemplate } from './entity/document-template.entity';
 import { Repository } from 'typeorm';
 import { InjectModel } from '@nestjs/mongoose';
-import { DocumentTemplate } from './schema/document-template.schema';
+import { DocumentTemplateDetail } from './schema/document-template.schema';
 import { Model } from 'mongoose';
 import { CreateDocumentTemplateDto } from './dto/create-document-template.dto';
 import { DocumentTemplateNotFoundException } from 'src/common/exceptions';
@@ -13,10 +13,10 @@ import { SaveDocumentTemplateDto } from './dto/save-document-template.dto';
 @Injectable()
 export class DocumentTemplateService {
   constructor(
-    @InjectRepository(DocumentTemplateEntity)
-    private documentTemplateRepository: Repository<DocumentTemplateEntity>,
-    @InjectModel(DocumentTemplate.name) 
-    private documentTemplateModel: Model<DocumentTemplate>,
+    @InjectRepository(DocumentTemplate)
+    private documentTemplateRepository: Repository<DocumentTemplate>,
+    @InjectModel(DocumentTemplateDetail.name) 
+    private documentTemplateDetailModel: Model<DocumentTemplateDetail>,
   ) {}
 
   async getDocumentTemplates(userId: number, options?: {
@@ -48,12 +48,12 @@ export class DocumentTemplateService {
       userId,
     });
 
-    const documentTemplate = new this.documentTemplateModel({
+    const documentTemplateDetail = new this.documentTemplateDetailModel({
       _id: documentTemplateEntity.id,
       dataTemplate: []
     });
 
-    await documentTemplate.save();
+    await documentTemplateDetail.save();
 
     return documentTemplateEntity;
   }
@@ -65,7 +65,7 @@ export class DocumentTemplateService {
     if (!documentTemplate) {
       throw new DocumentTemplateNotFoundException();
     }
-    return this.documentTemplateModel.findById(documentTemplateId);
+    return this.documentTemplateDetailModel.findById(documentTemplateId);
   }
 
   async updateDocumentTemplate(userId: number, documentTemplateId: string, updateDocumentTemplateDto: UpdateDocumentTemplateDto) {
@@ -88,7 +88,7 @@ export class DocumentTemplateService {
     if (!documentTemplate) {
       throw new DocumentTemplateNotFoundException();
     }
-    return this.documentTemplateModel.findByIdAndUpdate(documentTemplateId, saveDocumentTemplateDto);
+    return this.documentTemplateDetailModel.findByIdAndUpdate(documentTemplateId, saveDocumentTemplateDto);
   }
 
   async deleteDocumentTemplate(userId: number, documentTemplateId: string) {
@@ -98,7 +98,7 @@ export class DocumentTemplateService {
     if (!documentTemplate) {
       return;
     }
-    await this.documentTemplateModel.findByIdAndDelete(documentTemplateId);
+    await this.documentTemplateDetailModel.findByIdAndDelete(documentTemplateId);
     return this.documentTemplateRepository.remove(documentTemplate);
   }
 }
