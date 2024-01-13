@@ -1,6 +1,6 @@
 import { Controller, Post, Body, UnauthorizedException, Get, UseGuards, Query } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { ApiBody, ApiTags, ApiOAuth2 } from '@nestjs/swagger';
+import { ApiBody, ApiTags, ApiOAuth2, ApiQuery } from '@nestjs/swagger';
 import { Public } from 'src/common/decorators/public.decorator';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
@@ -58,6 +58,7 @@ export class AuthController {
   @Get('drive')
   @UseGuards(GoogleDriveOauthGuard)
   @ApiOAuth2(['https://www.googleapis.com/auth/drive'])
+  @ApiQuery({ name: 'fromUser', required: true, type: Number, description: 'Id of user create Drive connection' })
   async googleDriveAuth() {}
 
   @Get('drive/callback')
@@ -70,6 +71,7 @@ export class AuthController {
   @Get('gmail')
   @UseGuards(GmailOauthGuard)
   @ApiOAuth2(['https://mail.google.com/'])
+  @ApiQuery({ name: 'fromUser', required: true, type: Number, description: 'Id of user create Gmail connection' })
   async gmailAuth() {}
 
   @Get('gmail/callback')
@@ -82,6 +84,7 @@ export class AuthController {
   @Get('sheets')
   @UseGuards(GoogleSheetsOauthGuard)
   @ApiOAuth2(['https://www.googleapis.com/auth/spreadsheets'])
+  @ApiQuery({ name: 'fromUser', required: true, type: Number, description: 'Id of user create Google Sheets connection' })
   async googleSheetsAuth() {}
 
   @Get('sheets/callback')

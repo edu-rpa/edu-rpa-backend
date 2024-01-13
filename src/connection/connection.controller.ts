@@ -3,7 +3,7 @@ import { ConnectionService } from './connection.service';
 import { UserDecor } from 'src/common/decorators/user.decorator';
 import { UserPayload } from 'src/auth/strategy/jwt.strategy';
 import { AuthorizationProvider } from 'src/connection/entity/connection.entity';
-import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
+import { ApiTags, ApiBearerAuth, ApiQuery } from '@nestjs/swagger';
 
 @Controller('connection')
 @ApiTags('connection')
@@ -14,6 +14,7 @@ export class ConnectionController {
   ) {}
 
   @Get()
+  @ApiQuery({ name: 'provider', enum: AuthorizationProvider, required: false })
   async getConnections(@UserDecor() user: UserPayload, @Query('provider') provider?: AuthorizationProvider) {
     return this.connectionService.getConnections(user.id, provider);
   }

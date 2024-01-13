@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
-import { ApiBody, ApiTags, ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBody, ApiTags, ApiBearerAuth, ApiQuery } from '@nestjs/swagger';
 import { DocumentTemplateService } from './document-template.service';
 import { UserDecor } from 'src/common/decorators/user.decorator';
 import { UserPayload } from 'src/auth/strategy/jwt.strategy';
@@ -16,6 +16,8 @@ export class DocumentTemplateController {
   ) {}
 
   @Get()
+  @ApiQuery({ name: 'limit', required: false })
+  @ApiQuery({ name: 'page', required: false })
   async getDocumentTemplates(
     @UserDecor() user: UserPayload,
     @Query('limit') limit?: number,
