@@ -85,7 +85,25 @@ export interface Variable {
   defaultValue: any, 
 }
 
-export class Activity extends ActivityTemplate {
-  activityId: string;
-  packageId: string;
+// NOTE: the schema is set based on what is stored in the browser's local storage. It will be changed later.
+export class Activity {
+  activityID: string;
+  activityType: string;
+  properties: ActivityProperties;
+}
+
+export class ActivityProperties {
+  activityPackage: string;
+  serviceName: string;
+  activityName: string;
+  library: string;
+  arguments: ActivityArguments;
+  return: any;
+}
+
+export class ActivityArguments {
+  [argumentName: string]: {
+    keywordArg: string;
+    value: any;
+  };
 }

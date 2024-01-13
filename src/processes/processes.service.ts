@@ -87,12 +87,13 @@ export class ProcessesService {
       throw new ProcessNotFoundException();
     }
 
-    const processDetail = new this.processDetailModel({
-      _id: processId,
-      ...saveProcessDto,
-    });
-    const processForValidation = new ProcessForValidation(processDetail);
-    await this.processesValidateService.validateProcess(userId, processForValidation);
+    // NOTE: disable validation temporarily
+    // const processDetail = new this.processDetailModel({
+    //   _id: processId,
+    //   ...saveProcessDto,
+    // });
+    // const processForValidation = new ProcessForValidation(processDetail);
+    // await this.processesValidateService.validateProcess(userId, processForValidation);
 
     await this.processDetailModel.updateOne({ _id: processId }, {
       ...saveProcessDto,
