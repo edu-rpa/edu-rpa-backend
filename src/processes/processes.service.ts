@@ -39,8 +39,7 @@ export class ProcessesService {
 
   async createProcess(userId: number, createProcessDto: CreateProcessDto) {
     const processEntity = await this.processRepository.save({
-      name: createProcessDto.name,
-      description: createProcessDto.description,
+      ...createProcessDto,
       userId,
     });
 
@@ -60,7 +59,7 @@ export class ProcessesService {
     return processDocument;
   }
 
-  async getProcess(userId: number, processId: number) {
+  async getProcess(userId: number, processId: string) {
     const process = await this.processRepository.findOne({
       where: { id: processId, userId },
     });
@@ -70,7 +69,7 @@ export class ProcessesService {
     return this.processModel.findById(processId);
   }
 
-  async updateProcess(userId: number, processId: number, updateProcessDto: UpdateProcessDto) {
+  async updateProcess(userId: number, processId: string, updateProcessDto: UpdateProcessDto) {
     const process = await this.processRepository.findOne({
       where: { id: processId, userId },
     });
@@ -80,7 +79,7 @@ export class ProcessesService {
     return this.processRepository.update(processId, updateProcessDto);
   }
 
-  async saveProcess(userId: number, processId: number, saveProcessDto: SaveProcessDto) {
+  async saveProcess(userId: number, processId: string, saveProcessDto: SaveProcessDto) {
     const process = await this.processRepository.findOne({
       where: { id: processId, userId },
     });
@@ -104,7 +103,7 @@ export class ProcessesService {
     });
   }
 
-  async deleteProcess(userId: number, processId: number) {
+  async deleteProcess(userId: number, processId: string) {
     const process = await this.processRepository.findOne({
       where: { id: processId, userId },
     });
