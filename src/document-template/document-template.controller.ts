@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
-import { ApiBody, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiTags, ApiBearerAuth, ApiQuery } from '@nestjs/swagger';
 import { DocumentTemplateService } from './document-template.service';
 import { UserDecor } from 'src/common/decorators/user.decorator';
 import { UserPayload } from 'src/auth/strategy/jwt.strategy';
@@ -9,12 +9,15 @@ import { SaveDocumentTemplateDto } from './dto/save-document-template.dto';
 
 @Controller('document-template')
 @ApiTags('document-template')
+@ApiBearerAuth()
 export class DocumentTemplateController {
   constructor(
     private readonly documentTemplateService: DocumentTemplateService
   ) {}
 
   @Get()
+  @ApiQuery({ name: 'limit', required: false })
+  @ApiQuery({ name: 'page', required: false })
   async getDocumentTemplates(
     @UserDecor() user: UserPayload,
     @Query('limit') limit?: number,
@@ -29,22 +32,6 @@ export class DocumentTemplateController {
   }
 
   @Post()
-  @ApiBody({
-    schema: {
-      type: 'object',
-      properties: {
-        name: {
-          type: 'string',
-        },
-        description: {
-          type: 'string',
-        },
-        type: {
-          type: 'string',
-        },
-      },
-    },
-  })
   async createDocumentTemplate(
     @UserDecor() user: UserPayload,
     @Body() createProcessDto: CreateDocumentTemplateDto
@@ -61,19 +48,6 @@ export class DocumentTemplateController {
   }
 
   @Put('/:id')
-  @ApiBody({
-    schema: {
-      type: 'object',
-      properties: {
-        name: {
-          type: 'string',
-        },
-        description: {
-          type: 'string',
-        },
-      },
-    },
-  })
   async updateDocumentTemplate(
     @UserDecor() user: UserPayload,
     @Param('id') documentTemplateId: string,
@@ -83,11 +57,6 @@ export class DocumentTemplateController {
   }
 
   @Put('/:id/save')
-  @ApiBody({
-    schema: {
-      type: 'object',
-    },
-  })
   async saveDocumentTemplate(
     @UserDecor() user: UserPayload,
     @Param('id') documentTemplateId: string,

@@ -1,6 +1,6 @@
 import { Controller, Post, Body, UnauthorizedException, Get, UseGuards, Query } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { ApiBody, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiTags, ApiOAuth2, ApiQuery } from '@nestjs/swagger';
 import { Public } from 'src/common/decorators/public.decorator';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
@@ -21,19 +21,6 @@ export class AuthController {
   constructor(private authService: AuthService) {}
 
   @Post('login')
-  @ApiBody({
-    schema: {
-      type: 'object',
-      properties: {
-        email: {
-          type: 'string',
-        },
-        password: {
-          type: 'string',
-        },
-      },
-    },
-  })
   async login(@Body() loginDto: LoginDto) {
     const user = await this.authService.validateUser(loginDto);
     if (!user) {
@@ -43,61 +30,23 @@ export class AuthController {
   }
 
   @Post('register')
-  @ApiBody({
-    schema: {
-      type: 'object',
-      properties: {
-        email: {
-          type: 'string',
-        },
-        password: {
-          type: 'string',
-        },
-        name: {
-          type: 'string',
-        },
-      },
-    },
-  })
   async register(@Body() registerDto: RegisterDto) {
     return this.authService.registerUser(registerDto);
   }
 
   @Post('verify-otp')
-  @ApiBody({
-    schema: {
-      type: 'object',
-      properties: {
-        email: {
-          type: 'string',
-        },
-        otpCode: {
-          type: 'string',
-        },
-      },
-    },
-  })
   async verifyOtp(@Body() verifyOtpDto: VerifyOtpDto) {
     return this.authService.verifyOtp(verifyOtpDto);
   }
 
   @Post('resend-otp')
-  @ApiBody({
-    schema: {
-      type: 'object',
-      properties: {
-        email: {
-          type: 'string',
-        },
-      },
-    },
-  })
   async resendOtp(@Body() resendOtpDto: ResendOtpDto) {
     return this.authService.resendOtp(resendOtpDto);
   }
 
   @Get('google')
   @UseGuards(GoogleOauthGuard)
+  @ApiOAuth2(['https://www.googleapis.com/auth/userinfo.profile', 'https://www.googleapis.com/auth/userinfo.email'])
   async googleAuth() {}
 
   @Get('google/callback')
@@ -108,6 +57,8 @@ export class AuthController {
 
   @Get('drive')
   @UseGuards(GoogleDriveOauthGuard)
+  @ApiOAuth2(['https://www.googleapis.com/auth/drive'])
+  @ApiQuery({ name: 'fromUser', required: true, type: Number, description: 'Id of user create Drive connection' })
   async googleDriveAuth() {}
 
   @Get('drive/callback')
@@ -119,6 +70,8 @@ export class AuthController {
 
   @Get('gmail')
   @UseGuards(GmailOauthGuard)
+  @ApiOAuth2(['https://mail.google.com/'])
+  @ApiQuery({ name: 'fromUser', required: true, type: Number, description: 'Id of user create Gmail connection' })
   async gmailAuth() {}
 
   @Get('gmail/callback')
@@ -130,6 +83,8 @@ export class AuthController {
 
   @Get('sheets')
   @UseGuards(GoogleSheetsOauthGuard)
+  @ApiOAuth2(['https://www.googleapis.com/auth/spreadsheets'])
+  @ApiQuery({ name: 'fromUser', required: true, type: Number, description: 'Id of user create Google Sheets connection' })
   async googleSheetsAuth() {}
 
   @Get('sheets/callback')

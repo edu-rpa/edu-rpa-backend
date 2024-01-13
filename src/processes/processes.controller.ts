@@ -2,19 +2,22 @@ import { Body, Controller, Delete, Get, Post, Put, Query, Param } from '@nestjs/
 import { ProcessesService } from './processes.service';
 import { UserDecor } from 'src/common/decorators/user.decorator';
 import { UserPayload } from 'src/auth/strategy/jwt.strategy';
-import { ApiBody, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiTags, ApiBearerAuth, ApiQuery } from '@nestjs/swagger';
 import { CreateProcessDto } from './dto/create-process.dto';
 import { UpdateProcessDto } from './dto/update-process.dto';
 import { SaveProcessDto } from './dto/save-process.dto';
 
 @Controller('processes')
 @ApiTags('processes')
+@ApiBearerAuth()
 export class ProcessesController {
   constructor(
     private readonly processesService: ProcessesService
   ) {}
 
   @Get()
+  @ApiQuery({ name: 'limit', required: false })
+  @ApiQuery({ name: 'page', required: false })
   async getProcesses(
     @UserDecor() user: UserPayload,
     @Query('limit') limit?: number,
@@ -29,25 +32,6 @@ export class ProcessesController {
   }
 
   @Post()
-  @ApiBody({
-    schema: {
-      type: 'object',
-      properties: {
-        id: {
-          type: 'string',
-        },
-        name: {
-          type: 'string',
-        },
-        description: {
-          type: 'string',
-        },
-        xml: {
-          type: 'string',
-        },
-      },
-    },
-  })
   async createProcess(
     @UserDecor() user: UserPayload,
     @Body() createProcessDto: CreateProcessDto
@@ -64,19 +48,6 @@ export class ProcessesController {
   }
 
   @Put('/:id')
-  @ApiBody({
-    schema: {
-      type: 'object',
-      properties: {
-        name: {
-          type: 'string',
-        },
-        description: {
-          type: 'string',
-        },
-      },
-    },
-  })
   async updateProcess(
     @UserDecor() user: UserPayload,
     @Param('id') processId: string,
@@ -86,22 +57,6 @@ export class ProcessesController {
   }
 
   @Put('/:id/save')
-  @ApiBody({
-    schema: {
-      type: 'object',
-      properties: {
-        xml: {
-          type: 'string',
-        },
-        variables: {
-          type: 'object',
-        },
-        activities: {
-          type: 'array',
-        },
-      },
-    },
-  })
   async saveProcess(
     @UserDecor() user: UserPayload,
     @Param('id') processId: string,
