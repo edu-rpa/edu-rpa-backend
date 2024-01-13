@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
-import { ApiBody, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import { DocumentTemplateService } from './document-template.service';
 import { UserDecor } from 'src/common/decorators/user.decorator';
 import { UserPayload } from 'src/auth/strategy/jwt.strategy';
@@ -9,6 +9,7 @@ import { SaveDocumentTemplateDto } from './dto/save-document-template.dto';
 
 @Controller('document-template')
 @ApiTags('document-template')
+@ApiBearerAuth()
 export class DocumentTemplateController {
   constructor(
     private readonly documentTemplateService: DocumentTemplateService

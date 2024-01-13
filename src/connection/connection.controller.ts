@@ -3,10 +3,11 @@ import { ConnectionService } from './connection.service';
 import { UserDecor } from 'src/common/decorators/user.decorator';
 import { UserPayload } from 'src/auth/strategy/jwt.strategy';
 import { AuthorizationProvider } from 'src/connection/entity/connection.entity';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 
 @Controller('connection')
 @ApiTags('connection')
+@ApiBearerAuth()
 export class ConnectionController {
   constructor(
     private readonly connectionService: ConnectionService

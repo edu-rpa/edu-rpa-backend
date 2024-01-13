@@ -2,13 +2,14 @@ import { Body, Controller, Delete, Get, Post, Put, Query, Param } from '@nestjs/
 import { ProcessesService } from './processes.service';
 import { UserDecor } from 'src/common/decorators/user.decorator';
 import { UserPayload } from 'src/auth/strategy/jwt.strategy';
-import { ApiBody, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import { CreateProcessDto } from './dto/create-process.dto';
 import { UpdateProcessDto } from './dto/update-process.dto';
 import { SaveProcessDto } from './dto/save-process.dto';
 
 @Controller('processes')
 @ApiTags('processes')
+@ApiBearerAuth()
 export class ProcessesController {
   constructor(
     private readonly processesService: ProcessesService

@@ -1,6 +1,6 @@
 import { Controller, Post, Body, UnauthorizedException, Get, UseGuards, Query } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { ApiBody, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiTags, ApiOAuth2 } from '@nestjs/swagger';
 import { Public } from 'src/common/decorators/public.decorator';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
@@ -46,6 +46,7 @@ export class AuthController {
 
   @Get('google')
   @UseGuards(GoogleOauthGuard)
+  @ApiOAuth2(['https://www.googleapis.com/auth/userinfo.profile', 'https://www.googleapis.com/auth/userinfo.email'])
   async googleAuth() {}
 
   @Get('google/callback')
@@ -56,6 +57,7 @@ export class AuthController {
 
   @Get('drive')
   @UseGuards(GoogleDriveOauthGuard)
+  @ApiOAuth2(['https://www.googleapis.com/auth/drive'])
   async googleDriveAuth() {}
 
   @Get('drive/callback')
@@ -67,6 +69,7 @@ export class AuthController {
 
   @Get('gmail')
   @UseGuards(GmailOauthGuard)
+  @ApiOAuth2(['https://mail.google.com/'])
   async gmailAuth() {}
 
   @Get('gmail/callback')
@@ -78,6 +81,7 @@ export class AuthController {
 
   @Get('sheets')
   @UseGuards(GoogleSheetsOauthGuard)
+  @ApiOAuth2(['https://www.googleapis.com/auth/spreadsheets'])
   async googleSheetsAuth() {}
 
   @Get('sheets/callback')
