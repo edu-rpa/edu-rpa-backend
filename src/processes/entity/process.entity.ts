@@ -22,6 +22,7 @@ export class Process {
   @UpdateDateColumn()
   updatedAt: Date;
 
+  // NOTE: can use VersionColumn. Update version manually for now.
   @Column({
     nullable: false,
     default: 0,

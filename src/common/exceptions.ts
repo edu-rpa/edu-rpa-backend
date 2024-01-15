@@ -56,3 +56,9 @@ export class DocumentTemplateNotFoundException extends HttpException {
     super("Document template not found", 404);
   }
 }
+
+export class RobotNotFoundException extends HttpException {
+  constructor() {
+    super("Robot not found", 404);
+  }
+}
