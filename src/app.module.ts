@@ -13,6 +13,7 @@ import { ActivityPackagesModule } from './activity-packages/activity-packages.mo
 import { ProcessesModule } from './processes/processes.module';
 import { resolve } from 'path';
 import { DocumentTemplateModule } from './document-template/document-template.module';
+import { RobotModule } from './robot/robot.module';
 
 const ENV_FILE_PATH = process.env.NODE_ENV === 'production' ? 
   resolve(__dirname, '../env/.env.production') : 
@@ -54,6 +55,7 @@ const ENV_FILE_PATH = process.env.NODE_ENV === 'production' ?
     ActivityPackagesModule,
     ProcessesModule,
     DocumentTemplateModule,
+    RobotModule,
 
   ],
   controllers: [AppController],
