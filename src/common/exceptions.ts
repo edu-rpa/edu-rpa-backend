@@ -62,3 +62,9 @@ export class RobotNotFoundException extends HttpException {
     super("Robot not found", 404);
   }
 }
+
+export class FileTooLargeException extends HttpException {
+  constructor() {
+    super("File too large", 400);
+  }
+}
