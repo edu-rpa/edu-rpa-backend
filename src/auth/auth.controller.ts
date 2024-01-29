@@ -1,4 +1,4 @@
-import { Controller, Post, Body, UnauthorizedException, Get, UseGuards, Query } from '@nestjs/common';
+import { Controller, Post, Body, UnauthorizedException, Get, UseGuards, Query, Res, UseFilters } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { ApiBody, ApiTags, ApiOAuth2, ApiQuery } from '@nestjs/swagger';
 import { Public } from 'src/common/decorators/public.decorator';
@@ -13,12 +13,18 @@ import { UserTokenFromProvider } from 'src/connection/connection.service';
 import { AuthorizationProvider } from 'src/connection/entity/connection.entity';
 import { GmailOauthGuard } from './guard/gmail-oath.guard';
 import { GoogleSheetsOauthGuard } from './guard/google-sheets-oath.guard';
+import { Response } from 'express';
+import { ConfigService } from '@nestjs/config';
+import { HttpExceptionRedirectFilter } from 'src/common/filters/http-exception-redirect.filter';
 
 @Controller('auth')
 @ApiTags('auth')
 @Public()
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private configService: ConfigService,
+  ) {}
 
   @Post('login')
   async login(@Body() loginDto: LoginDto) {
@@ -50,9 +56,11 @@ export class AuthController {
   async googleAuth() {}
 
   @Get('google/callback')
+  @UseFilters(HttpExceptionRedirectFilter)
   @UseGuards(GoogleOauthGuard)
-  async googleAuthRedirect(@UserDecor() user: User) {
-    return this.authService.signJwt(user);
+  async googleAuthRedirect(@UserDecor() user: User, @Res() res: Response) {
+    const token = (await this.authService.signJwt(user)).accessToken;
+    res.redirect(`${this.configService.get('FRONTEND_URL')}/auth/login?token=${token}`);
   }
 
   @Get('drive')
