@@ -1,4 +1,4 @@
-import { Entity, Column, ManyToOne, PrimaryColumn } from 'typeorm';
+import { Entity, Column, ManyToOne, PrimaryColumn, CreateDateColumn } from 'typeorm';
 import { User } from '../../users/entity/user.entity';
 
 export enum AuthorizationProvider {
@@ -32,6 +32,9 @@ export class Connection {
     nullable: false,
   })
   refreshToken: string;
+
+  @CreateDateColumn()
+  createdAt: Date;
 
   @PrimaryColumn({
     nullable: false,

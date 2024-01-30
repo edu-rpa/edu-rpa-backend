@@ -43,7 +43,7 @@ export class ConnectionService {
       whereString += ' AND connection.provider = :provider';
     }
     return this.connectionRepository.createQueryBuilder('connection')
-      .select(['connection.provider', 'connection.name'])
+      .select(['connection.provider', 'connection.name', 'connection.createdAt'])
       .where(whereString, { userId, provider })
       .getMany();
   }
