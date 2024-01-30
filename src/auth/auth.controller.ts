@@ -15,7 +15,7 @@ import { GmailOauthGuard } from './guard/gmail-oath.guard';
 import { GoogleSheetsOauthGuard } from './guard/google-sheets-oath.guard';
 import { Response } from 'express';
 import { ConfigService } from '@nestjs/config';
-import { HttpExceptionRedirectFilter } from 'src/common/filters/http-exception-redirect.filter';
+import { HttpExceptionRedirectISFilter, HttpExceptionRedirectLoginFilter } from 'src/common/filters/http-exception-redirect.filter';
 
 @Controller('auth')
 @ApiTags('auth')
@@ -56,7 +56,7 @@ export class AuthController {
   async googleAuth() {}
 
   @Get('google/callback')
-  @UseFilters(HttpExceptionRedirectFilter)
+  @UseFilters(HttpExceptionRedirectLoginFilter)
   @UseGuards(GoogleOauthGuard)
   async googleAuthRedirect(@UserDecor() user: User, @Res() res: Response) {
     const token = (await this.authService.signJwt(user)).accessToken;
@@ -70,10 +70,16 @@ export class AuthController {
   async googleDriveAuth() {}
 
   @Get('drive/callback')
+  @UseFilters(HttpExceptionRedirectISFilter)
   @UseGuards(GoogleDriveOauthGuard)
-  async googleDriveAuthRedirect(@UserDecor() userToken: UserTokenFromProvider, @Query('state') state: string) {
+  async googleDriveAuthRedirect(
+    @UserDecor() userToken: UserTokenFromProvider, 
+    @Query('state') state: string, 
+    @Res() res: Response
+  ) {
     await this.authService.authorizeUserFromProvider(userToken, state, AuthorizationProvider.G_DRIVE);
-    return 'Authorized Google Drive successfully';
+    const message = 'Authorized Google Drive successfully!';
+    res.redirect(`${this.configService.get('FRONTEND_URL')}/integration-service?provider=${AuthorizationProvider.G_DRIVE}&message=${message}`);
   }
 
   @Get('gmail')
@@ -83,10 +89,16 @@ export class AuthController {
   async gmailAuth() {}
 
   @Get('gmail/callback')
+  @UseFilters(HttpExceptionRedirectISFilter)
   @UseGuards(GmailOauthGuard)
-  async gmailAuthRedirect(@UserDecor() userToken: UserTokenFromProvider, @Query('state') state: string) {
+  async gmailAuthRedirect(
+    @UserDecor() userToken: UserTokenFromProvider, 
+    @Query('state') state: string,
+    @Res() res: Response
+  ) {
     await this.authService.authorizeUserFromProvider(userToken, state, AuthorizationProvider.G_GMAIL);
-    return 'Authorized Gmail successfully';
+    const message = 'Authorized Gmail successfully!';
+    res.redirect(`${this.configService.get('FRONTEND_URL')}/integration-service?provider=${AuthorizationProvider.G_GMAIL}&message=${message}`);
   }
 
   @Get('sheets')
@@ -96,9 +108,15 @@ export class AuthController {
   async googleSheetsAuth() {}
 
   @Get('sheets/callback')
+  @UseFilters(HttpExceptionRedirectISFilter)
   @UseGuards(GoogleSheetsOauthGuard)
-  async googleSheetsAuthRedirect(@UserDecor() userToken: UserTokenFromProvider, @Query('state') state: string) {
+  async googleSheetsAuthRedirect(
+    @UserDecor() userToken: UserTokenFromProvider, 
+    @Query('state') state: string,
+    @Res() res: Response
+  ) {
     await this.authService.authorizeUserFromProvider(userToken, state, AuthorizationProvider.G_SHEETS);
-    return 'Authorized Google Sheets successfully';
+    const message = 'Authorized Google Sheets successfully!';
+    res.redirect(`${this.configService.get('FRONTEND_URL')}/integration-service?provider=${AuthorizationProvider.G_SHEETS}&message=${message}`);
   }
 }
