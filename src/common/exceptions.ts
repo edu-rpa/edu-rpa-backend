@@ -57,6 +57,12 @@ export class DocumentTemplateNotFoundException extends HttpException {
   }
 }
 
+export class ConnectionNotFoundException extends HttpException {
+  constructor() {
+    super("Connection not found", 404);
+  }
+}
+
 export class RobotNotFoundException extends HttpException {
   constructor() {
     super("Robot not found", 404);
@@ -66,5 +72,11 @@ export class RobotNotFoundException extends HttpException {
 export class FileTooLargeException extends HttpException {
   constructor() {
     super("File too large", 400);
+  }
+}
+
+export class CannotRefreshToken extends HttpException {
+  constructor() {
+    super("Cannot refresh token", 400);
   }
 }

@@ -83,8 +83,11 @@ export class AuthService {
 
   async authorizeUserFromProvider(userToken: UserTokenFromProvider, state: string, provider: AuthorizationProvider) {
     let fromUser: number;
+    let reconnect: boolean;
     try {
-      fromUser = JSON.parse(state).fromUser;
+      const obj = JSON.parse(state);
+      fromUser = obj.fromUser;
+      reconnect = obj.reconnect;
       if (!fromUser || Number.isNaN(fromUser)) {
         throw new Error();
       }
@@ -100,6 +103,8 @@ export class AuthService {
       refreshToken,
       email,
       provider,
+    }, {
+      reconnect,
     });
   }
 

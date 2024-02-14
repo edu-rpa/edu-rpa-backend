@@ -21,8 +21,8 @@ export class GoogleSheetsStrategy extends PassportStrategy(Strategy, 'google-she
   }
 
   authenticate(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, options?: any): void {
-    const { fromUser } = req.query;
-    const state = fromUser? JSON.stringify({ fromUser }): undefined;
+    const { fromUser, reconnect } = req.query;
+    const state = fromUser? JSON.stringify({ fromUser, reconnect }): undefined;
     super.authenticate(req, { ...options, state });
   }
 

@@ -67,6 +67,7 @@ export class AuthController {
   @UseGuards(GoogleDriveOauthGuard)
   @ApiOAuth2(['https://www.googleapis.com/auth/drive'])
   @ApiQuery({ name: 'fromUser', required: true, type: Number, description: 'Id of user create Drive connection' })
+  @ApiQuery({ name: 'reconnect', required: false, type: Boolean, description: 'Set true to replace old token' })
   async googleDriveAuth() {}
 
   @Get('drive/callback')
@@ -86,6 +87,7 @@ export class AuthController {
   @UseGuards(GmailOauthGuard)
   @ApiOAuth2(['https://mail.google.com/'])
   @ApiQuery({ name: 'fromUser', required: true, type: Number, description: 'Id of user create Gmail connection' })
+  @ApiQuery({ name: 'reconnect', required: false, type: Boolean, description: 'Set true to replace old token' })
   async gmailAuth() {}
 
   @Get('gmail/callback')
@@ -105,6 +107,7 @@ export class AuthController {
   @UseGuards(GoogleSheetsOauthGuard)
   @ApiOAuth2(['https://www.googleapis.com/auth/spreadsheets'])
   @ApiQuery({ name: 'fromUser', required: true, type: Number, description: 'Id of user create Google Sheets connection' })
+  @ApiQuery({ name: 'reconnect', required: false, type: Boolean, description: 'Set true to replace old token' })
   async googleSheetsAuth() {}
 
   @Get('sheets/callback')
