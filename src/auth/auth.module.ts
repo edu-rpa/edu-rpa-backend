@@ -16,6 +16,7 @@ import { GoogleDriveStrategy } from './strategy/google.drive.strategy';
 import { ConnectionModule } from 'src/connection/connection.module';
 import { GmailStrategy } from './strategy/gmail.strategy';
 import { GoogleSheetsStrategy } from './strategy/google.sheets.strategy';
+import { GoogleClassroomStrategy } from './strategy/google.classroom.strategy';
 
 @Module({
 
@@ -41,6 +42,7 @@ import { GoogleSheetsStrategy } from './strategy/google.sheets.strategy';
     GoogleDriveStrategy,
     GmailStrategy,
     GoogleSheetsStrategy,
+    GoogleClassroomStrategy,
     {
       provide: APP_GUARD,
       useClass: JwtAuthGuard,

@@ -16,6 +16,7 @@ import { GoogleSheetsOauthGuard } from './guard/google-sheets-oath.guard';
 import { Response } from 'express';
 import { ConfigService } from '@nestjs/config';
 import { HttpExceptionRedirectISFilter, HttpExceptionRedirectLoginFilter } from 'src/common/filters/http-exception-redirect.filter';
+import { GoogleClassroomOauthGuard } from './guard/google-classroom.guard';
 
 @Controller('auth')
 @ApiTags('auth')
@@ -121,5 +122,25 @@ export class AuthController {
     await this.authService.authorizeUserFromProvider(userToken, state, AuthorizationProvider.G_SHEETS);
     const message = 'Authorized Google Sheets successfully!';
     res.redirect(`${this.configService.get('FRONTEND_URL')}/integration-service?provider=${AuthorizationProvider.G_SHEETS}&message=${message}`);
+  }
+
+  @Get('classroom')
+  @UseGuards(GoogleClassroomOauthGuard)
+  @ApiOAuth2(['https://www.googleapis.com/auth/classroom.courses'])
+  @ApiQuery({ name: 'fromUser', required: true, type: Number, description: 'Id of user create Google Classroom connection' })
+  @ApiQuery({ name: 'reconnect', required: false, type: Boolean, description: 'Set true to replace old token' })
+  async googleClassroomAuth() {}
+
+  @Get('classroom/callback')
+  @UseFilters(HttpExceptionRedirectISFilter)
+  @UseGuards(GoogleClassroomOauthGuard)
+  async googleClassroomAuthRedirect(
+    @UserDecor() userToken: UserTokenFromProvider, 
+    @Query('state') state: string,
+    @Res() res: Response
+  ) {
+    await this.authService.authorizeUserFromProvider(userToken, state, AuthorizationProvider.G_CLASSROOM);
+    const message = 'Authorized Google Classroom successfully!';
+    res.redirect(`${this.configService.get('FRONTEND_URL')}/integration-service?provider=${AuthorizationProvider.G_CLASSROOM}&message=${message}`);
   }
 }
