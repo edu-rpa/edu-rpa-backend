@@ -14,7 +14,18 @@ export class GoogleClassroomStrategy extends PassportStrategy(Strategy, 'google-
       clientID: configService.get('GOOGLE_CLASSROOM_CLIENT_ID'),
       clientSecret: configService.get('GOOGLE_CLASSROOM_CLIENT_SECRET'),
       callbackURL: configService.get('GOOGLE_CLASSROOM_CALLBACK_URL'),
-      scope: ['https://www.googleapis.com/auth/classroom.courses', 'email', 'profile'],
+      scope: [
+        'https://www.googleapis.com/auth/classroom.courses',
+        'https://www.googleapis.com/auth/classroom.announcements',
+        'https://www.googleapis.com/auth/classroom.topics',
+        'https://www.googleapis.com/auth/classroom.courseworkmaterials',
+        'https://www.googleapis.com/auth/classroom.coursework.me',
+        'https://www.googleapis.com/auth/classroom.coursework.students',
+        'https://www.googleapis.com/auth/classroom.student-submissions.me.readonly',
+        'https://www.googleapis.com/auth/classroom.student-submissions.students.readonly',
+        'email',
+        'profile',
+      ],
     });
   }
 

@@ -199,12 +199,12 @@ export class AuthController {
   @ApiOAuth2([
     'https://www.googleapis.com/auth/classroom.courses',
     'https://www.googleapis.com/auth/classroom.announcements',
+    'https://www.googleapis.com/auth/classroom.topics',
+    'https://www.googleapis.com/auth/classroom.courseworkmaterials',
     'https://www.googleapis.com/auth/classroom.coursework.me',
     'https://www.googleapis.com/auth/classroom.coursework.students',
-    'https://www.googleapis.com/auth/classroom.courseworkmaterials',
     'https://www.googleapis.com/auth/classroom.student-submissions.me.readonly',
     'https://www.googleapis.com/auth/classroom.student-submissions.students.readonly',
-    'https://www.googleapis.com/auth/classroom.topics',
   ])
   @ApiQuery({
     name: 'fromUser',
