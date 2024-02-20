@@ -196,7 +196,16 @@ export class AuthController {
 
   @Get('classroom')
   @UseGuards(GoogleClassroomOauthGuard)
-  @ApiOAuth2(['https://www.googleapis.com/auth/classroom.courses'])
+  @ApiOAuth2([
+    'https://www.googleapis.com/auth/classroom.courses',
+    'https://www.googleapis.com/auth/classroom.announcements',
+    'https://www.googleapis.com/auth/classroom.coursework.me',
+    'https://www.googleapis.com/auth/classroom.coursework.students',
+    'https://www.googleapis.com/auth/classroom.courseworkmaterials',
+    'https://www.googleapis.com/auth/classroom.student-submissions.me.readonly',
+    'https://www.googleapis.com/auth/classroom.student-submissions.students.readonly',
+    'https://www.googleapis.com/auth/classroom.topics',
+  ])
   @ApiQuery({
     name: 'fromUser',
     required: true,
@@ -225,44 +234,6 @@ export class AuthController {
       AuthorizationProvider.G_CLASSROOM,
     );
     const message = 'Authenticated with Google Classroom successfully!';
-    res.redirect(
-      `${this.configService.get('FRONTEND_URL')}/integration-service?provider=${
-        AuthorizationProvider.G_CLASSROOM
-      }&message=${message}`,
-    );
-  }
-
-  @Get('classroom')
-  @UseGuards(GoogleClassroomOauthGuard)
-  @ApiOAuth2(['https://www.googleapis.com/auth/classroom.courses'])
-  @ApiQuery({
-    name: 'fromUser',
-    required: true,
-    type: Number,
-    description: 'Id of user create Google Classroom connection',
-  })
-  @ApiQuery({
-    name: 'reconnect',
-    required: false,
-    type: Boolean,
-    description: 'Set true to replace old token',
-  })
-  async googleClassroomAuth() {}
-
-  @Get('classroom/callback')
-  @UseFilters(HttpExceptionRedirectISFilter)
-  @UseGuards(GoogleClassroomOauthGuard)
-  async googleClassroomAuthRedirect(
-    @UserDecor() userToken: UserTokenFromProvider,
-    @Query('state') state: string,
-    @Res() res: Response,
-  ) {
-    await this.authService.authorizeUserFromProvider(
-      userToken,
-      state,
-      AuthorizationProvider.G_CLASSROOM,
-    );
-    const message = 'Authorized Google Classroom successfully!';
     res.redirect(
       `${this.configService.get('FRONTEND_URL')}/integration-service?provider=${
         AuthorizationProvider.G_CLASSROOM
