@@ -1,6 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { UnableToCreateConnectionException, ConnectionNotFoundException, CannotRefreshToken } from 'src/common/exceptions';
+import {
+  UnableToCreateConnectionException,
+  ConnectionNotFoundException,
+  CannotRefreshToken,
+} from 'src/common/exceptions';
 import { Connection, AuthorizationProvider } from 'src/connection/entity/connection.entity';
 import { Repository } from 'typeorm';
 import { google } from 'googleapis';
@@ -55,14 +59,17 @@ export class ConnectionService {
     };
   }
 
-  async createConnection(createConnectionDto: CreateConnectionDto, options?: { reconnect?: boolean }) {
+  async createConnection(
+    createConnectionDto: CreateConnectionDto,
+    options?: { reconnect?: boolean },
+  ) {
     if (!options.reconnect) {
       await this.checkIfAbleToCreateConnection(createConnectionDto);
 
       const connection = await this.connectionRepository.save({
         provider: createConnectionDto.provider,
         userId: createConnectionDto.fromUser,
-        name: createConnectionDto.email? createConnectionDto.email : Date.now().toString(),
+        name: createConnectionDto.email ? createConnectionDto.email : Date.now().toString(),
         accessToken: createConnectionDto.accessToken,
         refreshToken: createConnectionDto.refreshToken,
       });
@@ -90,16 +97,20 @@ export class ConnectionService {
     if (provider) {
       whereString += ' AND connection.provider = :provider';
     }
-    return this.connectionRepository.createQueryBuilder('connection')
+    return this.connectionRepository
+      .createQueryBuilder('connection')
       .select(['connection.provider', 'connection.name', 'connection.createdAt'])
       .where(whereString, { userId, provider })
       .getMany();
   }
 
-  async getConnection(userId: number, query: {
-    provider: AuthorizationProvider;
-    name: string;
-  }) {
+  async getConnection(
+    userId: number,
+    query: {
+      provider: AuthorizationProvider;
+      name: string;
+    },
+  ) {
     const connection = await this.connectionRepository.findOneBy({
       userId,
       provider: AuthorizationProvider[query.provider],
@@ -110,23 +121,19 @@ export class ConnectionService {
 
   private async checkIfAbleToCreateConnection(createConnectionDto: CreateConnectionDto) {
     if (!createConnectionDto.email) return;
-    
+
     const existingConnection = await this.connectionRepository.findOneBy({
       provider: createConnectionDto.provider,
       userId: createConnectionDto.fromUser,
       name: createConnectionDto.email,
     });
-    
+
     if (existingConnection) {
       throw new UnableToCreateConnectionException();
     }
   }
 
-  async refreshToken(
-    userId: number,
-    provider: AuthorizationProvider,
-    name: string,
-  ) {
+  async refreshToken(userId: number, provider: AuthorizationProvider, name: string) {
     const connection = await this.connectionRepository.findOneBy({
       userId,
       provider,
@@ -151,11 +158,7 @@ export class ConnectionService {
     }
   }
 
-  async removeConnection(
-    userId: number,
-    provider: AuthorizationProvider,
-    name: string,
-  ) {
+  async removeConnection(userId: number, provider: AuthorizationProvider, name: string) {
     const connection = await this.connectionRepository.findOneBy({
       userId,
       provider,

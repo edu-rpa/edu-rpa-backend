@@ -19,24 +19,23 @@ import { GoogleSheetsStrategy } from './strategy/google.sheets.strategy';
 import { GoogleClassroomStrategy } from './strategy/google.classroom.strategy';
 
 @Module({
-
   imports: [
-    UsersModule, 
+    UsersModule,
     PassportModule,
     EmailModule,
     ConnectionModule,
     JwtModule.registerAsync({
       useFactory: (configService: ConfigService) => ({
         secret: configService.get('JWT_SECRET'),
-        signOptions: { expiresIn: configService.get('JWT_EXPIRATION_TIME') }
+        signOptions: { expiresIn: configService.get('JWT_EXPIRATION_TIME') },
       }),
-      inject: [ConfigService]
+      inject: [ConfigService],
     }),
-    MongooseModule.forFeature([{ name: Otp.name, schema: OtpSchema }])
+    MongooseModule.forFeature([{ name: Otp.name, schema: OtpSchema }]),
   ],
 
   providers: [
-    AuthService, 
+    AuthService,
     JwtStrategy,
     GoogleStrategy,
     GoogleDriveStrategy,
@@ -48,7 +47,6 @@ import { GoogleClassroomStrategy } from './strategy/google.classroom.strategy';
       useClass: JwtAuthGuard,
     },
   ],
-  controllers: [AuthController]
-
+  controllers: [AuthController],
 })
 export class AuthModule {}
