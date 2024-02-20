@@ -6,7 +6,6 @@ export enum AuthorizationProvider {
   G_SHEETS = 'Google Sheets',
   G_GMAIL = 'Gmail',
   G_DOCS = 'Google Docs',
-  G_CALENDAR = 'Google Calendar',
   G_CLASSROOM = 'Google Classroom',
 }
 
