@@ -70,14 +70,25 @@ export class AuthController {
     'https://www.googleapis.com/auth/userinfo.profile',
     'https://www.googleapis.com/auth/userinfo.email',
   ])
+  @ApiQuery({
+    name: 'redirectUrl',
+    required: true,
+    type: String,
+    description: 'Redirect url after login with Google',
+  })
   async googleAuth() {}
 
   @Get('google/callback')
   @UseFilters(HttpExceptionRedirectLoginFilter)
   @UseGuards(GoogleOauthGuard)
-  async googleAuthRedirect(@UserDecor() user: User, @Res() res: Response) {
+  async googleAuthRedirect(
+    @UserDecor() user: User,
+    @Query('state') state: string, 
+    @Res() res: Response
+  ) {
     const token = (await this.authService.signJwt(user)).accessToken;
-    res.redirect(`${this.configService.get('FRONTEND_URL')}/auth/login?token=${token}`);
+    const { redirectUrl } = JSON.parse(state);
+    res.redirect(`${redirectUrl}?token=${token}`);
   }
 
   @Get('drive')
