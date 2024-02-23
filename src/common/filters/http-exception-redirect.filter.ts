@@ -8,10 +8,11 @@ export class HttpExceptionRedirectLoginFilter implements ExceptionFilter {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
     const request = ctx.getRequest<Request>();
+    const { redirectUrl } = JSON.parse(request.query.state as string);
     const message = exception.message;
 
     response
-      .redirect(`${process.env.FRONTEND_URL}/auth/login?error=${message}`);
+      .redirect(`${redirectUrl}?error=${message}`);
   }
 }
 
