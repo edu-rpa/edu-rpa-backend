@@ -1,9 +1,10 @@
-import { IsArray, IsNotEmpty } from 'class-validator';
+import { IsObject, IsNotEmpty } from 'class-validator';
 import { Rectangle } from '../schema/document-template.schema';
 
 
 export class SaveDocumentTemplateDto {
-  @IsArray()
-  @IsNotEmpty()
-  dataTemplate: Rectangle[];
+  @IsObject()
+  dataTemplate: {
+    [label: string]: Rectangle;
+  }
 }
