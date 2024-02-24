@@ -6,18 +6,20 @@ export class Rectangle {
   top: number;
   right: number;
   bottom: number;
-  label?: string;
 };
 
 @Schema({
-  collection: 'document_templates'
+  collection: 'document_templates',
+  minimize: false,
 })
 export class DocumentTemplateDetail extends Document {
   @Prop()
   _id: string;
 
-  @Prop({ required: true })
-  dataTemplate: Rectangle[];
+  @Prop({required: true, type: Object, default: {}})
+  dataTemplate: {
+    [label: string]: Rectangle;
+  }
 }
 
 export const DocumentTemplateDetailSchema = SchemaFactory.createForClass(DocumentTemplateDetail);

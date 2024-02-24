@@ -9,15 +9,26 @@ import { CreateDocumentTemplateDto } from './dto/create-document-template.dto';
 import { DocumentTemplateNotFoundException } from 'src/common/exceptions';
 import { UpdateDocumentTemplateDto } from './dto/update-document-template.dto';
 import { SaveDocumentTemplateDto } from './dto/save-document-template.dto';
+import { 
+  S3Client,
+  DeleteObjectCommand,
+  ListObjectsV2Command, 
+} from '@aws-sdk/client-s3';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class DocumentTemplateService {
+  private readonly s3Client: S3Client;
+
   constructor(
     @InjectRepository(DocumentTemplate)
     private documentTemplateRepository: Repository<DocumentTemplate>,
     @InjectModel(DocumentTemplateDetail.name) 
     private documentTemplateDetailModel: Model<DocumentTemplateDetail>,
-  ) {}
+    private configService: ConfigService,
+  ) {
+    this.s3Client = new S3Client({ region: configService.get('AWS_REGION') });
+  }
 
   async getDocumentTemplates(userId: number, options?: {
     limit?: number;
@@ -50,7 +61,7 @@ export class DocumentTemplateService {
 
     const documentTemplateDetail = new this.documentTemplateDetailModel({
       _id: documentTemplateEntity.id,
-      dataTemplate: []
+      dataTemplate: {}
     });
 
     await documentTemplateDetail.save();
@@ -98,7 +109,32 @@ export class DocumentTemplateService {
     if (!documentTemplate) {
       return;
     }
+
+    await this.deleteDocumentTemplateFromS3(documentTemplateId);
+
     await this.documentTemplateDetailModel.findByIdAndDelete(documentTemplateId);
     return this.documentTemplateRepository.remove(documentTemplate);
+  }
+
+  private async deleteDocumentTemplateFromS3(documentTemplateId: string) {
+    const bucketName = 'edurpa-document-template';
+    const listCommand = new ListObjectsV2Command({
+      Bucket: bucketName,
+      Prefix: documentTemplateId,
+    });
+
+    const listResponse = await this.s3Client.send(listCommand);
+    if (!listResponse.Contents) {
+      return;
+    }
+
+    const deleteCommands = listResponse.Contents.map((content) => {
+      return new DeleteObjectCommand({
+        Bucket: bucketName,
+        Key: content.Key,
+      });
+    });
+
+    await Promise.all(deleteCommands.map((command) => this.s3Client.send(command)));
   }
 }
