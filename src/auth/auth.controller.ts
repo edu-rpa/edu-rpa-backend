@@ -205,6 +205,7 @@ export class AuthController {
     'https://www.googleapis.com/auth/classroom.coursework.students',
     'https://www.googleapis.com/auth/classroom.student-submissions.me.readonly',
     'https://www.googleapis.com/auth/classroom.student-submissions.students.readonly',
+    'https://www.googleapis.com/auth/classroom.rosters',
   ])
   @ApiQuery({
     name: 'fromUser',
