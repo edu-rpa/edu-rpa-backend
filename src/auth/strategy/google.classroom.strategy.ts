@@ -24,6 +24,7 @@ export class GoogleClassroomStrategy extends PassportStrategy(Strategy, 'google-
         'https://www.googleapis.com/auth/classroom.student-submissions.me.readonly',
         'https://www.googleapis.com/auth/classroom.student-submissions.students.readonly',
         'https://www.googleapis.com/auth/classroom.rosters',
+        'https://www.googleapis.com/auth/classroom.profile.emails',
         'email',
         'profile',
       ],
