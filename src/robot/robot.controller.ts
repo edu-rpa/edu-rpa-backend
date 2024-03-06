@@ -37,11 +37,4 @@ export class RobotController {
     return await this.robotService.createRobot(user.id, createRobotDto);
   }
 
-  @Get('/:id')
-  async getRobotDetail(
-    @UserDecor() user: UserPayload,
-    @Param('id') robotId: string
-  ) {
-    return await this.robotService.getRobotDetail(user.id, robotId);
-  }
 }
