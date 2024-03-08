@@ -56,6 +56,11 @@ export class ConnectionService {
         configService.get('GOOGLE_CLASSROOM_CLIENT_SECRET'),
         configService.get('GOOGLE_CLASSROOM_CALLBACK_URL'),
       ),
+      [AuthorizationProvider.G_FORMS]: new google.auth.OAuth2(
+        configService.get('GOOGLE_FORMS_CLIENT_ID'),
+        configService.get('GOOGLE_FORMS_CLIENT_SECRET'),
+        configService.get('GOOGLE_FORMS_CALLBACK_URL'),
+      ),
     };
   }
 
