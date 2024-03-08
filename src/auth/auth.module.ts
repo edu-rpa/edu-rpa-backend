@@ -17,6 +17,7 @@ import { ConnectionModule } from 'src/connection/connection.module';
 import { GmailStrategy } from './strategy/gmail.strategy';
 import { GoogleSheetsStrategy } from './strategy/google.sheets.strategy';
 import { GoogleClassroomStrategy } from './strategy/google.classroom.strategy';
+import { GoogleFormsStrategy } from './strategy/google.forms.strategy';
 
 @Module({
   imports: [
@@ -42,6 +43,7 @@ import { GoogleClassroomStrategy } from './strategy/google.classroom.strategy';
     GmailStrategy,
     GoogleSheetsStrategy,
     GoogleClassroomStrategy,
+    GoogleFormsStrategy,
     {
       provide: APP_GUARD,
       useClass: JwtAuthGuard,

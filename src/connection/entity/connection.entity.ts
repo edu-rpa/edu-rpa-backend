@@ -7,6 +7,7 @@ export enum AuthorizationProvider {
   G_GMAIL = 'Gmail',
   G_DOCS = 'Google Docs',
   G_CLASSROOM = 'Google Classroom',
+  G_FORMS = 'Google Forms',
 }
 
 @Entity()
