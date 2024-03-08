@@ -30,6 +30,7 @@ import {
   HttpExceptionRedirectLoginFilter,
 } from 'src/common/filters/http-exception-redirect.filter';
 import { GoogleClassroomOauthGuard } from './guard/google-classroom-oath.guard';
+import { GoogleFormsOauthGuard } from './guard/google-forms-oauth.guard';
 
 @Controller('auth')
 @ApiTags('auth')
@@ -250,6 +251,44 @@ export class AuthController {
     res.redirect(
       `${this.configService.get('FRONTEND_URL')}/integration-service?provider=${
         AuthorizationProvider.G_CLASSROOM
+      }&message=${message}`,
+    );
+  }
+
+  @Get('forms')
+  @UseGuards(GoogleFormsOauthGuard)
+  @ApiOAuth2(['https://www.googleapis.com/auth/forms'])
+  @ApiQuery({
+    name: 'fromUser',
+    required: true,
+    type: Number,
+    description: 'Id of user create Gmail connection',
+  })
+  @ApiQuery({
+    name: 'reconnect',
+    required: false,
+    type: Boolean,
+    description: 'Set true to replace old token',
+  })
+  async googleFormsAuth() {}
+
+  @Get('forms/callback')
+  @UseFilters(HttpExceptionRedirectISFilter)
+  @UseGuards(GoogleFormsOauthGuard)
+  async googleFormsAuthRedirect(
+    @UserDecor() userToken: UserTokenFromProvider,
+    @Query('state') state: string,
+    @Res() res: Response,
+  ) {
+    await this.authService.authorizeUserFromProvider(
+      userToken,
+      state,
+      AuthorizationProvider.G_FORMS,
+    );
+    const message = 'Authorized Google Forms successfully!';
+    res.redirect(
+      `${this.configService.get('FRONTEND_URL')}/integration-service?provider=${
+        AuthorizationProvider.G_FORMS
       }&message=${message}`,
     );
   }
