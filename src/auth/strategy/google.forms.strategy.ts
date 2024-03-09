@@ -18,6 +18,7 @@ export class GoogleFormsStrategy extends PassportStrategy(Strategy, 'google-form
       callbackURL: configService.get('GOOGLE_FORMS_CALLBACK_URL'),
       scope: [
         'https://www.googleapis.com/auth/forms', 
+        'https://www.googleapis.com/auth/drive',
         'email', 
         'profile',
       ],
