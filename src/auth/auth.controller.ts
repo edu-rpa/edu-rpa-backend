@@ -84,8 +84,8 @@ export class AuthController {
   @UseGuards(GoogleOauthGuard)
   async googleAuthRedirect(
     @UserDecor() user: User,
-    @Query('state') state: string, 
-    @Res() res: Response
+    @Query('state') state: string,
+    @Res() res: Response,
   ) {
     const token = (await this.authService.signJwt(user)).accessToken;
     const { redirectUrl } = JSON.parse(state);
@@ -257,7 +257,7 @@ export class AuthController {
 
   @Get('forms')
   @UseGuards(GoogleFormsOauthGuard)
-  @ApiOAuth2(['https://www.googleapis.com/auth/forms'])
+  @ApiOAuth2(['https://www.googleapis.com/auth/forms', 'https://www.googleapis.com/auth/drive'])
   @ApiQuery({
     name: 'fromUser',
     required: true,
