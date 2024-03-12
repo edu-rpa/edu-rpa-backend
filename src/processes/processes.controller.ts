@@ -80,4 +80,13 @@ export class ProcessesController {
   ) {
     return await this.processesService.deleteProcess(user.id, processId);
   }
+
+  @Post('/:id/share')
+  async shareProcess(
+    @UserDecor() user: UserPayload,
+    @Param('id') processId: string,
+    @Body('emails') emails: string[]
+  ) {
+    return await this.processesService.shareProcess(user.id, processId, emails);
+  }
 }

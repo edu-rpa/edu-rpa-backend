@@ -13,6 +13,7 @@ import {
 import { ProcessesValidateService } from './processes-validate.service';
 import { ConnectionModule } from 'src/connection/connection.module';
 import { ActivityPackagesModule } from 'src/activity-packages/activity-packages.module';
+import { UsersModule } from 'src/users/users.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { ActivityPackagesModule } from 'src/activity-packages/activity-packages.
     MongooseModule.forFeature([{ name: ProcessDetail.name, schema: ProcessDetailSchema }]),
     ConnectionModule,
     ActivityPackagesModule,
+    UsersModule,
   ],
   providers: [ProcessesService, ProcessesValidateService],
   controllers: [ProcessesController]

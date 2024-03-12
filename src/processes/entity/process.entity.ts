@@ -29,11 +29,17 @@ export class Process {
   })
   version: number;
 
-  @Column({
-    nullable: false,
-  })
+  @PrimaryColumn()
   userId: number;
 
   @ManyToOne(() => User, (user) => user.id)
   user: User;
+
+  @Column({
+    nullable: true,
+  })
+  sharedByUserId: number;
+
+  @ManyToOne(() => User, (user) => user.id)
+  sharedByUser: User;
 }
