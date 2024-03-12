@@ -89,4 +89,12 @@ export class ProcessesController {
   ) {
     return await this.processesService.shareProcess(user.id, processId, emails);
   }
+
+  @Get('/:id/shared')
+  async getSharedToOfProcess(
+    @UserDecor() user: UserPayload,
+    @Param('id') processId: string
+  ) {
+    return await this.processesService.getSharedToOfProcess(user.id, processId);
+  }
 }

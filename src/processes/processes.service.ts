@@ -157,4 +157,12 @@ export class ProcessesService {
       activities: processDetail.activities,
     }).save();
   }
+
+  async getSharedToOfProcess(userId: number, processId: string) {
+    return this.processRepository.createQueryBuilder('process')
+      .leftJoinAndSelect('process.user', 'user', 'user.id = process.userId')
+      .where('process.id = :processId', { processId })
+      .andWhere('process.userId != :userId', { userId })
+      .getMany();
+  }
 }
