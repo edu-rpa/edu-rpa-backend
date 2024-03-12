@@ -7,9 +7,10 @@ import { ProcessDetail, ProcessForValidation } from 'src/processes/schema/proces
 import { Repository } from 'typeorm';
 import { ProcessesValidateService } from './processes-validate.service';
 import { CreateProcessDto } from './dto/create-process.dto';
-import { UnableToCreateProcessException, ProcessNotFoundException } from 'src/common/exceptions';
+import { UnableToCreateProcessException, ProcessNotFoundException, UserNotFoundException } from 'src/common/exceptions';
 import { UpdateProcessDto } from './dto/update-process.dto';
 import { SaveProcessDto } from './dto/save-process.dto';
+import { UsersService } from 'src/users/users.service';
 
 @Injectable()
 export class ProcessesService {
@@ -19,6 +20,7 @@ export class ProcessesService {
     @InjectModel(ProcessDetail.name) 
     private processDetailModel: Model<ProcessDetail>,
     private readonly processesValidateService: ProcessesValidateService,
+    private readonly usersService: UsersService,
   ) {}
 
   async getProcessesCount(userId: number) {
@@ -30,11 +32,13 @@ export class ProcessesService {
     page?: number;
   }) {
     const { limit, page } = options;
-    return this.processRepository.find({
-      where: { userId },
-      take: limit,
-      skip: (page - 1) * limit,
-    });
+    return this.processRepository.createQueryBuilder('process')
+      .leftJoinAndSelect('process.sharedByUser', 'user', 'user.id = process.sharedByUserId')
+      .where('process.userId = :userId', { userId })
+      .orderBy('process.updatedAt', 'DESC')
+      .skip((page - 1) * limit)
+      .take(limit)
+      .getMany();
   }
 
   async createProcess(userId: number, createProcessDto: CreateProcessDto) {
@@ -44,7 +48,7 @@ export class ProcessesService {
     });
 
     const processDetail = new this.processDetailModel({
-      _id: processEntity.id,
+      _id: `${userId}.${processEntity.id}`,
       xml: createProcessDto.xml,
       variables: {},
       activities: [],
@@ -66,7 +70,7 @@ export class ProcessesService {
     if (!process) {
       throw new ProcessNotFoundException();
     }
-    return this.processDetailModel.findById(processId);
+    return this.processDetailModel.findById(`${userId}.${processId}`);
   }
 
   async updateProcess(userId: number, processId: string, updateProcessDto: UpdateProcessDto) {
@@ -95,10 +99,13 @@ export class ProcessesService {
     // const processForValidation = new ProcessForValidation(processDetail);
     // await this.processesValidateService.validateProcess(userId, processForValidation);
 
-    await this.processDetailModel.updateOne({ _id: processId }, {
+    await this.processDetailModel.updateOne({ _id: `${userId}.${processId}` }, {
       ...saveProcessDto,
     });
-    return this.processRepository.update(processId, {
+    return this.processRepository.update({
+      id: processId,
+      userId,
+    }, {
       updatedAt: new Date(),
       version: process.version + 1,
     });
@@ -111,7 +118,51 @@ export class ProcessesService {
     if (!process) {
       return null;
     }
-    await this.processDetailModel.deleteOne({ _id: processId });
-    return this.processRepository.delete(processId);
+    await this.processDetailModel.deleteOne({ _id: `${userId}.${processId}` });
+    return this.processRepository.delete({ id: processId, userId });
+  }
+
+  async shareProcess(userId: number, processId: string, shareToEmails: string[]) {
+    const process = await this.processRepository.findOne({
+      where: { id: processId, userId },
+    });
+    if (!process) {
+      throw new ProcessNotFoundException();
+    }
+    
+    const promises = shareToEmails.map(async (email) => {
+      const user = await this.usersService.findOneByEmail(email);
+      if (!user) {
+        throw new UserNotFoundException();
+      }
+      await this.createSharedProcess(process, user.id);
+    });
+    await Promise.all(promises);
+  }
+
+  private async createSharedProcess(process: Process, shareTo: number) {
+    await this.processRepository.save({
+      ...process,
+      id: process.id,
+      userId: shareTo,
+      sharedByUserId: process.userId,
+      version: 0,
+    });
+
+    const processDetail = await this.processDetailModel.findById(`${process.userId}.${process.id}`);
+    await new this.processDetailModel({
+      _id: `${shareTo}.${process.id}`,
+      xml: processDetail.xml,
+      variables: processDetail.variables,
+      activities: processDetail.activities,
+    }).save();
+  }
+
+  async getSharedToOfProcess(userId: number, processId: string) {
+    return this.processRepository.createQueryBuilder('process')
+      .leftJoinAndSelect('process.user', 'user', 'user.id = process.userId')
+      .where('process.id = :processId', { processId })
+      .andWhere('process.userId != :userId', { userId })
+      .getMany();
   }
 }
