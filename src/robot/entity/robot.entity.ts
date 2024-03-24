@@ -2,6 +2,12 @@ import { Entity, Column, ManyToOne, PrimaryColumn, CreateDateColumn } from 'type
 import { User } from 'src/users/entity/user.entity';
 import { Process } from 'src/processes/entity/process.entity';
 
+export enum TriggerType {
+  SCHEDULE = 'schedule',
+  MANUAL = 'manual',
+  EVENT_GMAIL = 'event-gmail',
+}
+
 @Entity()
 export class Robot {
   @Column({
@@ -26,4 +32,11 @@ export class Robot {
 
   @CreateDateColumn()
   createdAt: Date;
+
+  @Column({
+    type: 'enum',
+    enum: TriggerType,
+    default: TriggerType.MANUAL,
+  })
+  triggerType: TriggerType;
 }
