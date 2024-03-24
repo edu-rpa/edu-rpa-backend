@@ -1,4 +1,5 @@
 import { IsString, IsNotEmpty } from 'class-validator';
+import { TriggerType } from '../entity/robot.entity';
 
 export class CreateRobotDto {
   @IsString()
@@ -13,4 +14,8 @@ export class CreateRobotDto {
   @IsString()
   @IsNotEmpty()
   code: string;
+
+  @IsString()
+  @IsNotEmpty()
+  triggerType: TriggerType;
 }
