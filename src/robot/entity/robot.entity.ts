@@ -6,6 +6,8 @@ export enum TriggerType {
   SCHEDULE = 'schedule',
   MANUAL = 'manual',
   EVENT_GMAIL = 'event-gmail',
+  EVENT_DRIVE = 'event-drive',
+  EVENT_FORMS = 'event-forms',
 }
 
 @Entity()
