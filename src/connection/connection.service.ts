@@ -7,10 +7,9 @@ import {
 } from 'src/common/exceptions';
 import { Connection, AuthorizationProvider } from 'src/connection/entity/connection.entity';
 import { Repository } from 'typeorm';
-import { google } from 'googleapis';
-import { OAuth2Client } from 'google-auth-library';
 import { ConfigService } from '@nestjs/config';
 import axios from 'axios';
+import { GoogleService } from 'src/google/google.service';
 
 export interface UserTokenFromProvider {
   accessToken: string;
@@ -28,41 +27,12 @@ export interface CreateConnectionDto {
 
 @Injectable()
 export class ConnectionService {
-  oauth2Clients: Record<string, OAuth2Client>;
-
   constructor(
     @InjectRepository(Connection)
     private connectionRepository: Repository<Connection>,
     readonly configService: ConfigService,
-  ) {
-    this.oauth2Clients = {
-      [AuthorizationProvider.G_DRIVE]: new google.auth.OAuth2(
-        configService.get('GOOGLE_DRIVE_CLIENT_ID'),
-        configService.get('GOOGLE_DRIVE_CLIENT_SECRET'),
-        configService.get('GOOGLE_DRIVE_CALLBACK_URL'),
-      ),
-      [AuthorizationProvider.G_SHEETS]: new google.auth.OAuth2(
-        configService.get('GOOGLE_SHEETS_CLIENT_ID'),
-        configService.get('GOOGLE_SHEETS_CLIENT_SECRET'),
-        configService.get('GOOGLE_SHEETS_CALLBACK_URL'),
-      ),
-      [AuthorizationProvider.G_GMAIL]: new google.auth.OAuth2(
-        configService.get('GMAIL_CLIENT_ID'),
-        configService.get('GMAIL_CLIENT_SECRET'),
-        configService.get('GMAIL_CALLBACK_URL'),
-      ),
-      [AuthorizationProvider.G_CLASSROOM]: new google.auth.OAuth2(
-        configService.get('GOOGLE_CLASSROOM_CLIENT_ID'),
-        configService.get('GOOGLE_CLASSROOM_CLIENT_SECRET'),
-        configService.get('GOOGLE_CLASSROOM_CALLBACK_URL'),
-      ),
-      [AuthorizationProvider.G_FORMS]: new google.auth.OAuth2(
-        configService.get('GOOGLE_FORMS_CLIENT_ID'),
-        configService.get('GOOGLE_FORMS_CLIENT_SECRET'),
-        configService.get('GOOGLE_FORMS_CALLBACK_URL'),
-      ),
-    };
-  }
+    private googleService: GoogleService,
+  ) {}
 
   async createConnection(
     createConnectionDto: CreateConnectionDto,
@@ -149,7 +119,7 @@ export class ConnectionService {
       throw new ConnectionNotFoundException();
     }
 
-    const oauth2Client = this.oauth2Clients[provider];
+    const oauth2Client = this.googleService.getOAuth2Client(provider);
     oauth2Client.setCredentials({
       access_token: connection.accessToken,
       refresh_token: connection.refreshToken,

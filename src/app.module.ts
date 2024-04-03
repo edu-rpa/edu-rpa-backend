@@ -14,6 +14,8 @@ import { ProcessesModule } from './processes/processes.module';
 import { resolve } from 'path';
 import { DocumentTemplateModule } from './document-template/document-template.module';
 import { RobotModule } from './robot/robot.module';
+import { GoogleModule } from './google/google.module';
+import { GoogleFormsModule } from './google-forms/google-forms.module';
 
 const ENV_FILE_PATH = process.env.NODE_ENV === 'production' ? 
   resolve(__dirname, '../env/.env.production') : 
@@ -56,6 +58,8 @@ const ENV_FILE_PATH = process.env.NODE_ENV === 'production' ?
     ProcessesModule,
     DocumentTemplateModule,
     RobotModule,
+    GoogleModule,
+    GoogleFormsModule,
 
   ],
   controllers: [AppController],
