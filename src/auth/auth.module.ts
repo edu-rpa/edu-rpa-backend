@@ -18,6 +18,7 @@ import { GmailStrategy } from './strategy/gmail.strategy';
 import { GoogleSheetsStrategy } from './strategy/google.sheets.strategy';
 import { GoogleClassroomStrategy } from './strategy/google.classroom.strategy';
 import { GoogleFormsStrategy } from './strategy/google.forms.strategy';
+import { HeaderApiKeyStrategy } from './strategy/api-key.stategy';
 
 @Module({
   imports: [
@@ -48,6 +49,7 @@ import { GoogleFormsStrategy } from './strategy/google.forms.strategy';
       provide: APP_GUARD,
       useClass: JwtAuthGuard,
     },
+    HeaderApiKeyStrategy
   ],
   controllers: [AuthController],
 })

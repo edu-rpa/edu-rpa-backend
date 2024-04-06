@@ -1,9 +1,12 @@
-import { Controller, Delete, Get, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpException, HttpStatus, Post, Query, UseGuards } from '@nestjs/common';
 import { ConnectionService } from './connection.service';
 import { UserDecor } from 'src/common/decorators/user.decorator';
 import { UserPayload } from 'src/auth/strategy/jwt.strategy';
 import { AuthorizationProvider } from 'src/connection/entity/connection.entity';
-import { ApiTags, ApiBearerAuth, ApiQuery } from '@nestjs/swagger';
+import { ApiTags, ApiBearerAuth, ApiQuery, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
+import { AuthGuard } from '@nestjs/passport';
+import { Public } from 'src/common/decorators/public.decorator';
+import { GetUserCredentialBodyDto } from './dto/robot-credentials.dto';
 
 @Controller('connection')
 @ApiTags('connection')
@@ -35,5 +38,26 @@ export class ConnectionController {
     @Query('name') name: string,
   ) {
     return this.connectionService.removeConnection(user.id, provider, name);
+  }
+
+  @Post('/for-robot')
+  @Public()
+  @UseGuards(AuthGuard('api-key'))
+  @ApiBody({ type: GetUserCredentialBodyDto }) // Use this for request body
+  async getConnectionsForRobotRun(
+    @Body() body: GetUserCredentialBodyDto
+  ){
+    const {userId, providers} = body
+    try {
+      let result = await this.connectionService.getConnectionByProviders(userId, providers)
+      return result
+    } catch (error) {
+      throw new HttpException({
+        status: HttpStatus.BAD_REQUEST,
+        error: JSON.stringify(error),
+      }, HttpStatus.FORBIDDEN, {
+        cause: error
+      });
+    }
   }
 }
