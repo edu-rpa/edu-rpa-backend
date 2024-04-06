@@ -17,7 +17,7 @@ export class GoogleFormsStrategy extends PassportStrategy(Strategy, 'google-form
       clientSecret: configService.get('GOOGLE_FORMS_CLIENT_SECRET'),
       callbackURL: configService.get('GOOGLE_FORMS_CALLBACK_URL'),
       scope: [
-        'https://www.googleapis.com/auth/forms', 
+        'https://www.googleapis.com/auth/forms.body', 
         'https://www.googleapis.com/auth/forms.responses.readonly',
         'https://www.googleapis.com/auth/drive',
         'email', 
