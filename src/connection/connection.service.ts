@@ -163,4 +163,15 @@ export class ConnectionService {
 
     return res;
   }
+
+  async getConnectionByProviders(userId: number, providers: AuthorizationProvider[]) {
+    // Use TypeORM's query builder to build a query
+    const query = this.connectionRepository
+      .createQueryBuilder('connection')
+      .where('connection.userId = :userId', { userId })
+      .andWhere('connection.provider IN (:...providers)', { providers });
+
+    // Execute the query and return the result
+    return query.getMany();
+  }
 }
