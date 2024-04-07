@@ -7,6 +7,7 @@ import { ApiTags, ApiBearerAuth, ApiQuery, ApiOperation, ApiResponse, ApiBody } 
 import { AuthGuard } from '@nestjs/passport';
 import { Public } from 'src/common/decorators/public.decorator';
 import { GetUserCredentialBodyDto } from './dto/robot-credentials.dto';
+import { GetUserCredentialWithRobotVersionBodyDto } from './dto/robot-version-credentials.dto';
 
 @Controller('connection')
 @ApiTags('connection')
@@ -59,5 +60,14 @@ export class ConnectionController {
         cause: error
       });
     }
+  }
+  @Post('/for-robot/version')
+  @Public()
+  @UseGuards(AuthGuard('api-key'))
+  async getConnectionsForRobotVersion(
+    @Body() body: GetUserCredentialWithRobotVersionBodyDto
+  ){
+    const {userId, processId, processVersion} = body
+    return this.connectionService.getRobotConnection(userId, processId, processVersion)
   }
 }

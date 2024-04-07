@@ -1,15 +1,17 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import {
   UnableToCreateConnectionException,
   ConnectionNotFoundException,
   CannotRefreshToken,
 } from 'src/common/exceptions';
-import { Connection, AuthorizationProvider } from 'src/connection/entity/connection.entity';
+import { Connection, AuthorizationProvider, RobotConnection} from 'src/connection/entity/';
 import { Repository } from 'typeorm';
 import { ConfigService } from '@nestjs/config';
 import axios from 'axios';
 import { GoogleService } from 'src/google/google.service';
+import crypto from 'crypto';
+import { Robot } from 'src/robot/entity/robot.entity';
 
 export interface UserTokenFromProvider {
   accessToken: string;
@@ -30,6 +32,10 @@ export class ConnectionService {
   constructor(
     @InjectRepository(Connection)
     private connectionRepository: Repository<Connection>,
+    @InjectRepository(RobotConnection)
+    private robotConnectionRepository: Repository<RobotConnection>,
+    @InjectRepository(Robot)
+    private robotRepository: Repository<Robot>,
     readonly configService: ConfigService,
     private googleService: GoogleService,
   ) {}
@@ -174,4 +180,46 @@ export class ConnectionService {
     // Execute the query and return the result
     return query.getMany();
   }
+
+  async addRobotConnection(userId: number,robotKey: string, providers: AuthorizationProvider[]) {
+    let credentials = await this.getConnectionByProviders(userId, providers);
+    this.checkValidCredentials(providers, credentials)
+    return this.robotConnectionRepository.save(credentials.map(c => ({
+      robotKey: robotKey,
+      connectionKey: c.connectionKey
+    })))
+  }
+
+  async getRobotConnection(userId: number, processId: string, processVersion: number) {
+    let robot = await this.robotRepository.findOne({
+      where: {
+        userId: userId,
+        processId: processId,
+        processVersion: processVersion
+      }
+    })
+    let robotKey = robot.robotKey
+    return this.robotConnectionRepository.find({
+      select: ["robotKey"],
+      where: {
+        robotKey: robotKey
+      },
+      relations: ['connection']
+    })
+  }
+
+  checkValidCredentials(providers:  AuthorizationProvider[], credentials: Connection[]) {
+    if(credentials.length != providers.length) {
+      let credentialProviders = credentials.map((c: { provider: any; }) => c.provider)
+      let misMatchProvider = providers.filter((p: any) => !credentialProviders.includes(p))
+      throw new BadRequestException(
+        'Something bad happened', 
+        { 
+          cause: new Error(),
+          description: `Missing credentials for: ${JSON.stringify(misMatchProvider)}` 
+        }
+      )
+    }
+  }
+
 }

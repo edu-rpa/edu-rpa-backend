@@ -41,4 +41,10 @@ export class Robot {
     default: TriggerType.MANUAL,
   })
   triggerType: TriggerType;
+
+  @Column({
+    nullable: false,
+    name: "robot_key"
+  })
+  robotKey: string;
 }
