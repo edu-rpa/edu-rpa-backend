@@ -1,5 +1,8 @@
-import { IsString, IsNotEmpty } from 'class-validator';
+import { IsString, IsNotEmpty, ArrayMinSize, ArrayUnique } from 'class-validator';
 import { TriggerType } from '../entity/robot.entity';
+import { ApiProperty } from '@nestjs/swagger';
+import { IsEnumArray } from 'src/common/decorators';
+import { AuthorizationProvider } from 'src/connection/entity/connection.entity';
 
 export class CreateRobotDto {
   @IsString()
@@ -18,4 +21,7 @@ export class CreateRobotDto {
   @IsString()
   @IsNotEmpty()
   triggerType: TriggerType;
+
+  @ApiProperty({ type: [String], enum: AuthorizationProvider, isArray: true, description: 'List of authorized providers' })
+  providers?: AuthorizationProvider[];
 }

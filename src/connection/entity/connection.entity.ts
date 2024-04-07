@@ -44,4 +44,10 @@ export class Connection {
 
   @ManyToOne(() => User, (user) => user.id)
   user: User;
+
+  @Column({
+    nullable: false,
+    name: "connection_key"
+  })
+  connectionKey: string;
 }

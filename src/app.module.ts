@@ -38,7 +38,7 @@ const ENV_FILE_PATH = process.env.NODE_ENV === 'production' ?
         password: configService.get('MYSQL_PASSWORD'),
         database: configService.get('MYSQL_DATABASE'),
         autoLoadEntities: true,
-        synchronize: true, // WARNING: set to false on production! As it will drop all tables and re-create them if entities changed.
+        synchronize: false, // WARNING: set to false on production! As it will drop all tables and re-create them if entities changed.
       }),
       inject: [ConfigService],
     }),
