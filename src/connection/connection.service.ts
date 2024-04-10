@@ -12,6 +12,8 @@ import axios from 'axios';
 import { GoogleService } from 'src/google/google.service';
 import crypto from 'crypto';
 import { Robot } from 'src/robot/entity/robot.entity';
+import { GoogleCredentialService } from './service/google-credential.service';
+import { connect } from 'http2';
 
 export interface UserTokenFromProvider {
   accessToken: string;
@@ -38,6 +40,7 @@ export class ConnectionService {
     private robotRepository: Repository<Robot>,
     readonly configService: ConfigService,
     private googleService: GoogleService,
+    private googleCredentialService: GoogleCredentialService,
   ) {}
 
   async createConnection(
@@ -199,13 +202,18 @@ export class ConnectionService {
       }
     })
     let robotKey = robot.robotKey
-    return this.robotConnectionRepository.find({
-      select: ["robotKey"],
+    let robotConnectionsMapping = await this.robotConnectionRepository.find({
+      select: [],
       where: {
         robotKey: robotKey
       },
       relations: ['connection']
     })
+    let connections = robotConnectionsMapping.map(conn => ({
+      fileName: ConnectionService.getCredentialFileName(conn.connectionKey),
+      data:this.googleCredentialService.create(conn.connection)
+    }))
+    return connections
   }
 
   checkValidCredentials(providers:  AuthorizationProvider[], credentials: Connection[]) {
@@ -222,4 +230,7 @@ export class ConnectionService {
     }
   }
 
+  static getCredentialFileName(connectionKey: string) {
+    return `${connectionKey}.json`
+  }
 }

@@ -5,13 +5,14 @@ import { Connection, RobotConnection } from 'src/connection/entity/';
 import { ConnectionController } from './connection.controller';
 import { GoogleModule } from 'src/google/google.module';
 import { Robot } from 'src/robot/entity/robot.entity';
+import { GoogleCredentialService } from './service/google-credential.service';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Connection, RobotConnection, Robot]),
     GoogleModule,
   ],
-  providers: [ConnectionService],
+  providers: [ConnectionService, GoogleCredentialService],
   exports: [ConnectionService],
   controllers: [ConnectionController]
 })
