@@ -6,8 +6,8 @@ import { AuthorizationProvider } from 'src/connection/entity/connection.entity';
 import { ApiTags, ApiBearerAuth, ApiQuery, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { Public } from 'src/common/decorators/public.decorator';
-import { GetUserCredentialBodyDto } from './dto/robot-credentials.dto';
-import { GetUserCredentialWithRobotVersionBodyDto } from './dto/robot-version-credentials.dto';
+import { GetUserCredentialBodyDto } from './dto/robot-credentials-body.dto';
+import { GetUserCredentialWithRobotVersionBodyDto } from './dto/robot-version-credentials-body.dto';
 
 @Controller('connection')
 @ApiTags('connection')
