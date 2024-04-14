@@ -41,16 +41,15 @@ export class ConnectionController {
     return this.connectionService.removeConnection(user.id, provider, name);
   }
 
-  @Post('/for-robot')
-  @Public()
-  @UseGuards(AuthGuard('api-key'))
+  @Post('/robot')
   @ApiBody({ type: GetUserCredentialBodyDto }) // Use this for request body
   async getConnectionsForRobotRun(
+    @UserDecor() user: UserPayload,
     @Body() body: GetUserCredentialBodyDto
   ){
-    const {userId, providers} = body
+    const {providers} = body
     try {
-      let result = await this.connectionService.getConnectionByProviders(userId, providers)
+      let result = await this.connectionService.getRobotConnectionByProviders(user.id, providers)
       return result
     } catch (error) {
       throw new HttpException({
@@ -61,6 +60,8 @@ export class ConnectionController {
       });
     }
   }
+
+
   @Post('/for-robot/version')
   @Public()
   @UseGuards(AuthGuard('api-key'))
