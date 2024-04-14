@@ -20,6 +20,12 @@ export class RobotConnection {
       })
     connectionKey: string;
 
+    @Column({
+      nullable: false,
+      default: true,
+    })
+    isActivate: boolean;
+
     @ManyToOne(() => Robot)
     @JoinColumn({ name: "robot_key", referencedColumnName: "robotKey" })
     robot: Robot;

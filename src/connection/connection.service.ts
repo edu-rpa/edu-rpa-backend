@@ -83,7 +83,7 @@ export class ConnectionService {
     }
     return this.connectionRepository
       .createQueryBuilder('connection')
-      .select(['connection.provider', 'connection.name', 'connection.createdAt'])
+      .select(['connection.provider', 'connection.name', 'connection.createdAt', 'connection.connectionKey'])
       .where(whereString, { userId, provider })
       .getMany();
   }
@@ -173,7 +173,7 @@ export class ConnectionService {
     return res;
   }
 
-  async getConnectionByProviders(userId: number, providers: AuthorizationProvider[]) {
+  async getRobotConnectionByProviders(userId: number, providers: AuthorizationProvider[]) {
     // Use TypeORM's query builder to build a query
     const query = this.connectionRepository
       .createQueryBuilder('connection')
@@ -185,7 +185,7 @@ export class ConnectionService {
   }
 
   async addRobotConnection(userId: number,robotKey: string, providers: AuthorizationProvider[]) {
-    let credentials = await this.getConnectionByProviders(userId, providers);
+    let credentials = await this.getRobotConnectionByProviders(userId, providers);
     this.checkValidCredentials(providers, credentials)
     return this.robotConnectionRepository.save(credentials.map(c => ({
       robotKey: robotKey,
