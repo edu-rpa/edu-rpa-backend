@@ -16,10 +16,11 @@ import { DocumentTemplateModule } from './document-template/document-template.mo
 import { RobotModule } from './robot/robot.module';
 import { GoogleModule } from './google/google.module';
 import { GoogleFormsModule } from './google-forms/google-forms.module';
+import { NotificationModule } from './notification/notification.module';
 
 const ENV_FILE_PATH = process.env.NODE_ENV === 'production' ? 
-  resolve(__dirname, '../env/.env.production') : 
-  resolve(__dirname, '../env/.env');
+  resolve(__dirname, '../../env/.env.production') : 
+  resolve(__dirname, '../../env/.env');
 
 @Module({
   imports: [
@@ -38,6 +39,8 @@ const ENV_FILE_PATH = process.env.NODE_ENV === 'production' ?
         password: configService.get('MYSQL_PASSWORD'),
         database: configService.get('MYSQL_DATABASE'),
         autoLoadEntities: true,
+        migrations: [resolve(__dirname, 'migrations/*{.ts,.js}')],
+        migrationsRun: false,
         synchronize: false, // WARNING: set to false on production! As it will drop all tables and re-create them if entities changed.
       }),
       inject: [ConfigService],
@@ -60,6 +63,7 @@ const ENV_FILE_PATH = process.env.NODE_ENV === 'production' ?
     RobotModule,
     GoogleModule,
     GoogleFormsModule,
+    NotificationModule,
 
   ],
   controllers: [AppController],
