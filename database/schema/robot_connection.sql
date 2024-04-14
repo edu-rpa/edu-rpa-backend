@@ -68,7 +68,7 @@ CREATE TRIGGER before_connection_insert
 BEFORE INSERT ON connection
 FOR EACH ROW
 BEGIN
-    SET NEW.connection_key = SHA2(CONCAT(NEW.userId, NEW.provider), 256);
+    SET NEW.connection_key = SHA2(CONCAT(NEW.userId, NEW.name , NEW.provider), 256);
 END//
 DELIMITER ;
 
@@ -100,7 +100,7 @@ BEGIN
         END IF;
 
         -- Generate new connection_key using SHA256 hash
-        SET connection_key_val = SHA2(CONCAT(userId_val, provider_val), 256);
+        SET connection_key_val = SHA2(CONCAT(userId_val,name_val, provider_val), 256);
 
         -- Update connection_key for the current row
         UPDATE connection
@@ -111,9 +111,7 @@ BEGIN
 
     CLOSE cur;
 END//
-
 DELIMITER ;
-
 CALL update_old_connections();
 
 # Create table to mapping robot and connection
@@ -121,10 +119,11 @@ CREATE TABLE robot_connection
 (
     robot_key      VARCHAR(64) NOT NULL,
     connection_key VARCHAR(64) NOT NULL,
+    isActivate     boolean default true,
     PRIMARY KEY (robot_key, connection_key),
     FOREIGN KEY (robot_key) REFERENCES robot (robot_key),
     FOREIGN KEY (connection_key) REFERENCES connection (connection_key)
 );
 
-
+ALTER TABLE robot_connection ADD COLUMN isActivate boolean default  true;
 

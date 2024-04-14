@@ -14,6 +14,7 @@ import crypto from 'crypto';
 import { Robot } from 'src/robot/entity/robot.entity';
 import { GoogleCredentialService } from './service/google-credential.service';
 import { connect } from 'http2';
+import { WhereClause } from 'typeorm/query-builder/WhereClause';
 
 export interface UserTokenFromProvider {
   accessToken: string;
@@ -173,7 +174,7 @@ export class ConnectionService {
     return res;
   }
 
-  async getRobotConnectionByProviders(userId: number, providers: AuthorizationProvider[]) {
+  async getConnectionByProviders(userId: number, providers: AuthorizationProvider[]) {
     // Use TypeORM's query builder to build a query
     const query = this.connectionRepository
       .createQueryBuilder('connection')
@@ -185,7 +186,7 @@ export class ConnectionService {
   }
 
   async addRobotConnection(userId: number,robotKey: string, providers: AuthorizationProvider[]) {
-    let credentials = await this.getRobotConnectionByProviders(userId, providers);
+    let credentials = await this.getConnectionByProviders(userId, providers);
     this.checkValidCredentials(providers, credentials)
     return this.robotConnectionRepository.save(credentials.map(c => ({
       robotKey: robotKey,
@@ -228,6 +229,40 @@ export class ConnectionService {
         }
       )
     }
+  }
+
+  async getRobotConnectionsForUser(userId: number, processId: string, processVersion: number,  limit: number = 0, offset: number = 10) {
+    let robot = await this.robotRepository.findOne({
+      where: {
+        userId: userId,
+        processId: processId,
+        processVersion: processVersion
+      }
+    })
+    let robotKey = robot.robotKey
+    let robotConnectionsMapping = await this.robotConnectionRepository.find({
+      select: [],
+      where: {
+        robotKey: robotKey
+      },
+      relations: ['connection'],
+      skip: limit,
+      take: offset
+    })
+    return robotConnectionsMapping.map(conn => conn.connection)
+  }
+
+
+  async getRobotsByConnection(connectionKey: string, limit: number = 0, offset: number = 0) {
+    let result = await this.robotConnectionRepository.find({
+      where: {
+        connectionKey: connectionKey
+      },
+      relations: ['robot'],
+      skip: limit,
+      take: offset
+    })
+    return result.map(c => c.robot)
   }
 
   static getCredentialFileName(connectionKey: string) {
