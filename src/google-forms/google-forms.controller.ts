@@ -14,7 +14,7 @@ export class GoogleFormsController {
 
   @Get()
   @ApiQuery({ name: 'connectionName', required: true })
-  async getDocumentTemplates(
+  async getForms(
     @UserDecor() user: UserPayload,
     @Query('connectionName') connectionName: string,
   ) {
