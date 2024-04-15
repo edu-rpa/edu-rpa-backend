@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpException, HttpStatus, Post, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Post, Query, UseGuards } from '@nestjs/common';
 import { ConnectionService } from './connection.service';
 import { UserDecor } from 'src/common/decorators/user.decorator';
 import { UserPayload } from 'src/auth/strategy/jwt.strategy';
@@ -42,16 +42,40 @@ export class ConnectionController {
   }
 
   @Post('/robot')
-  @ApiBody({ type: GetUserCredentialBodyDto }) // Use this for request body
   async getConnectionsForRobotRun(
     @UserDecor() user: UserPayload,
-    @Body() body: GetUserCredentialBodyDto
+    @Body() body: Omit<GetUserCredentialWithRobotVersionBodyDto, "userId">
   ){
-    const {providers} = body
+    const {id} = user
+    const {processId,processVersion} = body
     try {
-      let result = await this.connectionService.getRobotConnectionByProviders(user.id, providers)
+      let result = await this.connectionService.getRobotConnectionsForUser(id, processId, processVersion)
       return result
     } catch (error) {
+      console.log(error)
+      throw new HttpException({
+        status: HttpStatus.BAD_REQUEST,
+        error: JSON.stringify(error),
+      }, HttpStatus.FORBIDDEN, {
+        cause: error
+      });
+    }
+  }
+
+  @Get('/usage/:connectionKey')
+  async getRobotListUsedConnection(
+    @UserDecor() user: UserPayload,
+    @Param('connectionKey') connectionKey: string,
+    @Query('limit') limit?: number | undefined,
+    @Query('offset') offset?: number | undefined,
+  ){
+    try {
+      limit = isNaN(limit as number) ? undefined : limit;
+      offset = isNaN(offset as number) ? undefined : offset;
+      let result = await this.connectionService.getRobotsByConnection(connectionKey, limit, offset)
+      return result
+    } catch (error) { 
+      console.log(error)
       throw new HttpException({
         status: HttpStatus.BAD_REQUEST,
         error: JSON.stringify(error),
