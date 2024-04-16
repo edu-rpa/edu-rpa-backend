@@ -15,6 +15,7 @@ import { Robot } from 'src/robot/entity/robot.entity';
 import { GoogleCredentialService } from './service/google-credential.service';
 import { connect } from 'http2';
 import { WhereClause } from 'typeorm/query-builder/WhereClause';
+import { CreateRobotProvider } from 'src/robot/dto/create-robot-v2.dto';
 
 export interface UserTokenFromProvider {
   accessToken: string;
@@ -185,10 +186,8 @@ export class ConnectionService {
     return query.getMany();
   }
 
-  async addRobotConnection(userId: number,robotKey: string, providers: AuthorizationProvider[]) {
-    let credentials = await this.getConnectionByProviders(userId, providers);
-    this.checkValidCredentials(providers, credentials)
-    return this.robotConnectionRepository.save(credentials.map(c => ({
+  async addRobotConnection(userId: number,robotKey: string, providers: CreateRobotProvider[]) {
+    return this.robotConnectionRepository.save(providers.map(c => ({
       robotKey: robotKey,
       connectionKey: c.connectionKey
     })))

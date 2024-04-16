@@ -4,6 +4,7 @@ import { RobotService } from './robot.service';
 import { UserDecor } from 'src/common/decorators/user.decorator';
 import { UserPayload } from 'src/auth/strategy/jwt.strategy';
 import { CreateRobotDto } from './dto/create-robot.dto';
+import { CreateRobotDtoV2 } from './dto/create-robot-v2.dto';
 
 @Controller('robot')
 @ApiTags('robot')
@@ -32,7 +33,7 @@ export class RobotController {
   @Post()
   async createRobot(
     @UserDecor() user: UserPayload,
-    @Body() createRobotDto: CreateRobotDto
+    @Body() createRobotDto: CreateRobotDtoV2
   ) {
     return await this.robotService.createRobot(user.id, createRobotDto);
   }

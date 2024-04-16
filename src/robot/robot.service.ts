@@ -11,6 +11,7 @@ import {
 } from '@aws-sdk/client-s3';
 import { ConfigService } from '@nestjs/config';
 import { ConnectionService } from 'src/connection/connection.service';
+import { CreateRobotDtoV2 } from './dto/create-robot-v2.dto';
 
 @Injectable()
 export class RobotService {
@@ -48,7 +49,7 @@ export class RobotService {
     return this.robotRepository.count({ where: { userId } });
   }
 
-  async createRobot(userId: number, createRobotDto: CreateRobotDto) {
+  async createRobot(userId: number, createRobotDto: CreateRobotDtoV2) {
     const providers = createRobotDto.providers
     const process = await this.processRepository.findOne({
       where: { id: createRobotDto.processId, userId },
@@ -75,7 +76,7 @@ export class RobotService {
     return robotInfo
   }
 
-  async createRobotDb(createRobotDto: CreateRobotDto, process: Process, userId: number): Promise<Robot> {
+  async createRobotDb(createRobotDto: CreateRobotDtoV2, process: Process, userId: number): Promise<Robot> {
     try {
       // Create Robot
       await this.robotRepository.save({
