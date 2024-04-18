@@ -52,12 +52,11 @@ Steps
 1. Update the config/mysql.datasource.ts file with the entity/entities you want to create a migration for.
 2. Run the following command to generate a migration file:
 ```bash
-npm run build
-typeorm migration:generate -d dist\\config\\mysql.datasource.js migrations/<your_migration_name>
+npm run migration:generate migrations/<your_migration_name>
 ```
 3. Run the following command to apply the migration:
 ```bash
-typeorm migration:run -- -d dist\\config\\mysql.datasource.js
+npm run migration:run
 ```
 
 ## Authors
