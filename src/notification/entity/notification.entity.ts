@@ -1,6 +1,7 @@
 import { Entity, Column, ManyToOne, PrimaryGeneratedColumn, CreateDateColumn } from 'typeorm';
 import { User } from 'src/users/entity/user.entity';
 
+// TODO: send notification of ROBOT_EXECUTION
 export enum NotificationType {
   ROBOT_TRIGGER,
   ROBOT_EXECUTION,
