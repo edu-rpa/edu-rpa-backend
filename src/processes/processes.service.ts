@@ -11,6 +11,8 @@ import { UnableToCreateProcessException, ProcessNotFoundException, UserNotFoundE
 import { UpdateProcessDto } from './dto/update-process.dto';
 import { SaveProcessDto } from './dto/save-process.dto';
 import { UsersService } from 'src/users/users.service';
+import { NotificationService } from 'src/notification/notification.service';
+import { NotificationType } from 'src/notification/entity/notification.entity';
 
 @Injectable()
 export class ProcessesService {
@@ -21,6 +23,7 @@ export class ProcessesService {
     private processDetailModel: Model<ProcessDetail>,
     private readonly processesValidateService: ProcessesValidateService,
     private readonly usersService: UsersService,
+    private readonly notificationService: NotificationService,
   ) {}
 
   async getProcessesCount(userId: number) {
@@ -136,6 +139,12 @@ export class ProcessesService {
         throw new UserNotFoundException();
       }
       await this.createSharedProcess(process, user.id);
+      await this.notificationService.createNotification({
+        title: `Process has been shared with you`,
+        content: `Process ${process.name} has been shared with you by ${process.user.email}`,
+        type: NotificationType.PROCESS_SHARED,
+        userId: user.id,
+      });
     });
     await Promise.all(promises);
   }

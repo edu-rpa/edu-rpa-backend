@@ -7,6 +7,7 @@ import { CreateDocumentTemplateDto } from './dto/create-document-template.dto';
 import { UpdateDocumentTemplateDto } from './dto/update-document-template.dto';
 import { SaveDocumentTemplateDto } from './dto/save-document-template.dto';
 import { DocumentTemplateDetail } from './schema/document-template.schema';
+import { DocumentTemplateType } from './entity/document-template.entity';
 
 @Controller('document-template')
 @ApiTags('document-template')
@@ -19,12 +20,14 @@ export class DocumentTemplateController {
   @Get()
   @ApiQuery({ name: 'limit', required: false })
   @ApiQuery({ name: 'page', required: false })
+  @ApiQuery({ name: 'type', required: false })
   async getDocumentTemplates(
     @UserDecor() user: UserPayload,
     @Query('limit') limit?: number,
-    @Query('page') page?: number
+    @Query('page') page?: number,
+    @Query('type') type?: DocumentTemplateType,
   ) {
-    return this.documentTemplateService.getDocumentTemplates(user.id, { page, limit });
+    return this.documentTemplateService.getDocumentTemplates(user.id, { page, limit, type });
   }
 
   @Get('/count')

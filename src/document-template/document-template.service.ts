@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DocumentTemplate } from './entity/document-template.entity';
+import { DocumentTemplate, DocumentTemplateType } from './entity/document-template.entity';
 import { Repository } from 'typeorm';
 import { InjectModel } from '@nestjs/mongoose';
 import { DocumentTemplateDetail } from './schema/document-template.schema';
@@ -33,17 +33,23 @@ export class DocumentTemplateService {
   async getDocumentTemplates(userId: number, options?: {
     limit?: number;
     page?: number;
+    type?: DocumentTemplateType;
   }) {
+    const {limit, page, type} = options
     const findOptions = {
-      where: { userId },
+      where: { 
+        userId,
+       },
     };
+    if(type && type.length != 0) {
+      findOptions.where["type"] = type
+    }
     if (options?.limit) {
       findOptions['take'] = options.limit;
     }
     if (options?.page) {
       findOptions['skip'] = (options.page - 1) * options.limit;
     }
-
     return this.documentTemplateRepository.find(findOptions);
   }
 

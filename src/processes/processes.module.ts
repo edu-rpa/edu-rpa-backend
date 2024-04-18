@@ -14,6 +14,7 @@ import { ProcessesValidateService } from './processes-validate.service';
 import { ConnectionModule } from 'src/connection/connection.module';
 import { ActivityPackagesModule } from 'src/activity-packages/activity-packages.module';
 import { UsersModule } from 'src/users/users.module';
+import { NotificationModule } from 'src/notification/notification.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { UsersModule } from 'src/users/users.module';
     ConnectionModule,
     ActivityPackagesModule,
     UsersModule,
+    NotificationModule,
   ],
   providers: [ProcessesService, ProcessesValidateService],
   controllers: [ProcessesController]
