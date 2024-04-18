@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Model } from 'mongoose';
@@ -132,6 +132,9 @@ export class ProcessesService {
     if (!process) {
       throw new ProcessNotFoundException();
     }
+    if (process.sharedByUserId) {
+      throw new ForbiddenException();
+    }
     
     const promises = shareToEmails.map(async (email) => {
       const user = await this.usersService.findOneByEmail(email);
@@ -168,6 +171,16 @@ export class ProcessesService {
   }
 
   async getSharedToOfProcess(userId: number, processId: string) {
+    const process = await this.processRepository.findOne({
+      where: { id: processId, userId },
+    });
+    if (!process) {
+      throw new ProcessNotFoundException();
+    }
+    if (process.sharedByUserId) {
+      throw new ForbiddenException();
+    }
+
     return this.processRepository.createQueryBuilder('process')
       .leftJoinAndSelect('process.user', 'user', 'user.id = process.userId')
       .where('process.id = :processId', { processId })
