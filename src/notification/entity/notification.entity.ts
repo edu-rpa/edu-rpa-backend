@@ -3,10 +3,10 @@ import { User } from 'src/users/entity/user.entity';
 
 // TODO: send notification of ROBOT_EXECUTION
 export enum NotificationType {
-  ROBOT_TRIGGER,
-  ROBOT_EXECUTION,
-  PROCESS_SHARED,
-  CONNECTION_CHECK,
+  ROBOT_TRIGGER = 'ROBOT_TRIGGER',
+  ROBOT_EXECUTION = 'ROBOT_EXECUTION',
+  PROCESS_SHARED = 'PROCESS_SHARED',
+  CONNECTION_CHECK = 'CONNECTION_CHECK',
 }
 
 @Entity()
