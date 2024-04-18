@@ -17,6 +17,8 @@ import { RobotModule } from './robot/robot.module';
 import { GoogleModule } from './google/google.module';
 import { GoogleFormsModule } from './google-forms/google-forms.module';
 import { NotificationModule } from './notification/notification.module';
+import { ScheduleModule } from '@nestjs/schedule';
+import { TaskScheduleModule } from './task-schedule/task-schedule.module';
 
 const ENV_FILE_PATH = process.env.NODE_ENV === 'production' ? 
   resolve(__dirname, '../../env/.env.production') : 
@@ -53,6 +55,8 @@ const ENV_FILE_PATH = process.env.NODE_ENV === 'production' ?
       inject: [ConfigService],
     }),
 
+    ScheduleModule.forRoot(),
+
     UsersModule,
     AuthModule,
     EmailModule,
@@ -64,6 +68,7 @@ const ENV_FILE_PATH = process.env.NODE_ENV === 'production' ?
     GoogleModule,
     GoogleFormsModule,
     NotificationModule,
+    TaskScheduleModule,
 
   ],
   controllers: [AppController],
