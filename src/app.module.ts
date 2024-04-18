@@ -17,14 +17,15 @@ import { RobotModule } from './robot/robot.module';
 import { GoogleModule } from './google/google.module';
 import { GoogleFormsModule } from './google-forms/google-forms.module';
 import { NotificationModule } from './notification/notification.module';
+import { LogModule } from './log/log.module';
 
-const ENV_FILE_PATH = process.env.NODE_ENV === 'production' ? 
-  resolve(__dirname, '../../env/.env.production') : 
-  resolve(__dirname, '../../env/.env');
+const ENV_FILE_PATH =
+  process.env.NODE_ENV === 'production'
+    ? resolve(__dirname, '../../env/.env.production')
+    : resolve(__dirname, '../../env/.env');
 
 @Module({
   imports: [
-
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: ENV_FILE_PATH,
@@ -64,16 +65,13 @@ const ENV_FILE_PATH = process.env.NODE_ENV === 'production' ?
     GoogleModule,
     GoogleFormsModule,
     NotificationModule,
-
+    LogModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer
-      .apply(RequestLoggerMiddleware)
-      .forRoutes('*');
+    consumer.apply(RequestLoggerMiddleware).forRoutes('*');
   }
 }
