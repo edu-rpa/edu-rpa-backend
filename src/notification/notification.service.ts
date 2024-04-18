@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Notification } from './entity/notification.entity';
-import { Repository } from 'typeorm';
+import { FindManyOptions, Repository } from 'typeorm';
 import { CreateNotificationDto } from './dto/create-notification.dto';
 
 @Injectable()
@@ -15,10 +15,11 @@ export class NotificationService {
     limit: number;
     page: number;
   }) {
-    const findOptions = {
+    const findOptions: FindManyOptions<Notification> = {
       where: { userId },
       take: options.limit,
       skip: (options.page - 1) * options.limit,
+      order: { createdAt: 'DESC' },
     };
 
     return this.notificationRepository.find(findOptions);

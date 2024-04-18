@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Post, Put, Query } from '@nestjs/common';
-import { ApiBearerAuth, ApiQuery, ApiSecurity, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiQuery, ApiSecurity, ApiTags } from '@nestjs/swagger';
 import { NotificationService } from './notification.service';
 import { UserDecor } from 'src/common/decorators/user.decorator';
 import { UserPayload } from 'src/auth/strategy/jwt.strategy';
@@ -33,6 +33,7 @@ export class NotificationController {
   }
 
   @Put('/mark-as-read')
+  @ApiBody({ schema: { type: 'object', properties: { id: { type: 'number' } } } })
   @ApiBearerAuth()
   async markAsRead(@UserDecor() user: UserPayload, @Body('id') id: number) {
     return this.notificationService.markAsRead(id);
