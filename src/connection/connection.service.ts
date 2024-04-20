@@ -5,7 +5,7 @@ import {
   ConnectionNotFoundException,
   CannotRefreshToken,
 } from 'src/common/exceptions';
-import { Connection, AuthorizationProvider, RobotConnection} from 'src/connection/entity/';
+import { Connection, AuthorizationProvider, RobotConnection } from 'src/connection/entity/';
 import { Repository } from 'typeorm';
 import { ConfigService } from '@nestjs/config';
 import axios from 'axios';
@@ -85,7 +85,12 @@ export class ConnectionService {
     }
     return this.connectionRepository
       .createQueryBuilder('connection')
-      .select(['connection.provider', 'connection.name', 'connection.createdAt', 'connection.connectionKey'])
+      .select([
+        'connection.provider',
+        'connection.name',
+        'connection.createdAt',
+        'connection.connectionKey',
+      ])
       .where(whereString, { userId, provider })
       .getMany();
   }
@@ -186,11 +191,13 @@ export class ConnectionService {
     return query.getMany();
   }
 
-  async addRobotConnection(userId: number,robotKey: string, providers: CreateRobotProvider[]) {
-    return this.robotConnectionRepository.save(providers.map(c => ({
-      robotKey: robotKey,
-      connectionKey: c.connectionKey
-    })))
+  async addRobotConnection(userId: number, robotKey: string, providers: CreateRobotProvider[]) {
+    return this.robotConnectionRepository.save(
+      providers.map((c) => ({
+        robotKey: robotKey,
+        connectionKey: c.connectionKey,
+      })),
+    );
   }
 
   async getRobotConnection(userId: number, processId: string, processVersion: number) {
@@ -198,73 +205,91 @@ export class ConnectionService {
       where: {
         userId: userId,
         processId: processId,
-        processVersion: processVersion
-      }
-    })
-    let robotKey = robot.robotKey
+        processVersion: processVersion,
+      },
+    });
+    let robotKey = robot.robotKey;
     let robotConnectionsMapping = await this.robotConnectionRepository.find({
       select: [],
       where: {
-        robotKey: robotKey
+        robotKey: robotKey,
       },
-      relations: ['connection']
-    })
-    let connections = robotConnectionsMapping.map(conn => ({
+      relations: ['connection'],
+    });
+    let connections = robotConnectionsMapping.map((conn) => ({
       fileName: ConnectionService.getCredentialFileName(conn.connectionKey),
-      data:this.googleCredentialService.create(conn.connection)
-    }))
-    return connections
+      data: this.googleCredentialService.create(conn.connection),
+    }));
+    return connections;
   }
 
-  checkValidCredentials(providers:  AuthorizationProvider[], credentials: Connection[]) {
-    if(credentials.length != providers.length) {
-      let credentialProviders = credentials.map((c: { provider: any; }) => c.provider)
-      let misMatchProvider = providers.filter((p: any) => !credentialProviders.includes(p))
-      throw new BadRequestException(
-        'Something bad happened', 
-        { 
-          cause: new Error(),
-          description: `Missing credentials for: ${JSON.stringify(misMatchProvider)}` 
-        }
-      )
+  checkValidCredentials(providers: AuthorizationProvider[], credentials: Connection[]) {
+    if (credentials.length != providers.length) {
+      let credentialProviders = credentials.map((c: { provider: any }) => c.provider);
+      let misMatchProvider = providers.filter((p: any) => !credentialProviders.includes(p));
+      throw new BadRequestException('Something bad happened', {
+        cause: new Error(),
+        description: `Missing credentials for: ${JSON.stringify(misMatchProvider)}`,
+      });
     }
   }
 
-  async getRobotConnectionsForUser(userId: number, processId: string, processVersion: number,  limit: number = 0, offset: number = 10) {
+  async getRobotConnectionsForUser(
+    userId: number,
+    processId: string,
+    processVersion: number,
+    limit: number = 0,
+    offset: number = 10,
+  ) {
     let robot = await this.robotRepository.findOne({
       where: {
         userId: userId,
         processId: processId,
-        processVersion: processVersion
-      }
-    })
-    let robotKey = robot.robotKey
+        processVersion: processVersion,
+      },
+    });
+    let robotKey = robot.robotKey;
     let robotConnectionsMapping = await this.robotConnectionRepository.find({
       select: [],
       where: {
-        robotKey: robotKey
+        robotKey: robotKey,
       },
       relations: ['connection'],
       skip: limit,
-      take: offset
-    })
-    return robotConnectionsMapping.map(conn => conn.connection)
+      take: offset,
+    });
+    return robotConnectionsMapping.map((conn) => conn.connection);
   }
-
 
   async getRobotsByConnection(connectionKey: string, limit: number = 0, offset: number = 0) {
     let result = await this.robotConnectionRepository.find({
       where: {
-        connectionKey: connectionKey
+        connectionKey: connectionKey,
       },
       relations: ['robot'],
       skip: limit,
-      take: offset
-    })
-    return result.map(c => c.robot)
+      take: offset,
+    });
+    return result.map((c) => c.robot);
   }
 
   static getCredentialFileName(connectionKey: string) {
-    return `${connectionKey}.json`
+    return `${connectionKey}.json`;
+  }
+
+  async getAllConnectionsByRobotKey(robotKey: string, limit: number = 0, offset: number = 0) {
+    let robotConnectionsMapping = await this.robotConnectionRepository.find({
+      select: [],
+      where: {
+        robotKey: robotKey,
+      },
+      relations: ['connection'],
+      skip: limit,
+      take: offset,
+    });
+    return robotConnectionsMapping.map(({ connection }) => {
+      const { accessToken, refreshToken, userId, ...response } = connection;
+      return response;
+    });
   }
 }
