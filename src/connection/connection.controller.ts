@@ -1,9 +1,27 @@
-import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Post, Query, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpException,
+  HttpStatus,
+  Param,
+  Post,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { ConnectionService } from './connection.service';
 import { UserDecor } from 'src/common/decorators/user.decorator';
 import { UserPayload } from 'src/auth/strategy/jwt.strategy';
 import { AuthorizationProvider } from 'src/connection/entity/connection.entity';
-import { ApiTags, ApiBearerAuth, ApiQuery, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiBearerAuth,
+  ApiQuery,
+  ApiOperation,
+  ApiResponse,
+  ApiBody,
+} from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { Public } from 'src/common/decorators/public.decorator';
 import { GetUserCredentialBodyDto } from './dto/robot-credentials-body.dto';
@@ -13,13 +31,14 @@ import { GetUserCredentialWithRobotVersionBodyDto } from './dto/robot-version-cr
 @ApiTags('connection')
 @ApiBearerAuth()
 export class ConnectionController {
-  constructor(
-    private readonly connectionService: ConnectionService
-  ) {}
+  constructor(private readonly connectionService: ConnectionService) {}
 
   @Get()
   @ApiQuery({ name: 'provider', enum: AuthorizationProvider, required: false })
-  async getConnections(@UserDecor() user: UserPayload, @Query('provider') provider?: AuthorizationProvider) {
+  async getConnections(
+    @UserDecor() user: UserPayload,
+    @Query('provider') provider?: AuthorizationProvider,
+  ) {
     return this.connectionService.getConnections(user.id, provider);
   }
 
@@ -44,21 +63,59 @@ export class ConnectionController {
   @Post('/robot')
   async getConnectionsForRobotRun(
     @UserDecor() user: UserPayload,
-    @Body() body: Omit<GetUserCredentialWithRobotVersionBodyDto, "userId">
-  ){
-    const {id} = user
-    const {processId,processVersion} = body
+    @Body() body: Omit<GetUserCredentialWithRobotVersionBodyDto, 'userId'>,
+  ) {
+    const { id } = user;
+    const { processId, processVersion } = body;
     try {
-      let result = await this.connectionService.getRobotConnectionsForUser(id, processId, processVersion)
-      return result
+      let result = await this.connectionService.getRobotConnectionsForUser(
+        id,
+        processId,
+        processVersion,
+      );
+      return result;
     } catch (error) {
-      console.log(error)
-      throw new HttpException({
-        status: HttpStatus.BAD_REQUEST,
-        error: JSON.stringify(error),
-      }, HttpStatus.FORBIDDEN, {
-        cause: error
-      });
+      console.log(error);
+      throw new HttpException(
+        {
+          status: HttpStatus.BAD_REQUEST,
+          error: JSON.stringify(error),
+        },
+        HttpStatus.FORBIDDEN,
+        {
+          cause: error,
+        },
+      );
+    }
+  }
+
+  @Get('/robot/:robotKey')
+  async getConnectionListByRobotKey(
+    @Param('robotKey') robotKey: string,
+    @Query('limit') limit?: number | undefined,
+    @Query('offset') offset?: number | undefined,
+  ) {
+    try {
+      limit = isNaN(limit as number) ? undefined : limit;
+      offset = isNaN(offset as number) ? undefined : offset;
+      let result = await this.connectionService.getAllConnectionsByRobotKey(
+        robotKey,
+        limit,
+        offset,
+      );
+      return result;
+    } catch (error) {
+      console.log(error);
+      throw new HttpException(
+        {
+          status: HttpStatus.BAD_REQUEST,
+          error: JSON.stringify(error),
+        },
+        HttpStatus.FORBIDDEN,
+        {
+          cause: error,
+        },
+      );
     }
   }
 
@@ -68,31 +125,32 @@ export class ConnectionController {
     @Param('connectionKey') connectionKey: string,
     @Query('limit') limit?: number | undefined,
     @Query('offset') offset?: number | undefined,
-  ){
+  ) {
     try {
       limit = isNaN(limit as number) ? undefined : limit;
       offset = isNaN(offset as number) ? undefined : offset;
-      let result = await this.connectionService.getRobotsByConnection(connectionKey, limit, offset)
-      return result
-    } catch (error) { 
-      console.log(error)
-      throw new HttpException({
-        status: HttpStatus.BAD_REQUEST,
-        error: JSON.stringify(error),
-      }, HttpStatus.FORBIDDEN, {
-        cause: error
-      });
+      let result = await this.connectionService.getRobotsByConnection(connectionKey, limit, offset);
+      return result;
+    } catch (error) {
+      console.log(error);
+      throw new HttpException(
+        {
+          status: HttpStatus.BAD_REQUEST,
+          error: JSON.stringify(error),
+        },
+        HttpStatus.FORBIDDEN,
+        {
+          cause: error,
+        },
+      );
     }
   }
-
 
   @Post('/for-robot/version')
   @Public()
   @UseGuards(AuthGuard('api-key'))
-  async getConnectionsForRobotVersion(
-    @Body() body: GetUserCredentialWithRobotVersionBodyDto
-  ){
-    const {userId, processId, processVersion} = body
-    return this.connectionService.getRobotConnection(userId, processId, processVersion)
+  async getConnectionsForRobotVersion(@Body() body: GetUserCredentialWithRobotVersionBodyDto) {
+    const { userId, processId, processVersion } = body;
+    return this.connectionService.getRobotConnection(userId, processId, processVersion);
   }
 }
