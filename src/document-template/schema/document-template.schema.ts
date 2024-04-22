@@ -16,6 +16,12 @@ export class DocumentTemplateDetail extends Document {
   @Prop()
   _id: string;
 
+  @Prop({required: false})
+  size: {
+    width: number;
+    height: number;
+  };
+
   @Prop({required: true, type: Object, default: {}})
   dataTemplate: {
     [label: string]: Rectangle;
