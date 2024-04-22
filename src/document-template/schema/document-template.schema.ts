@@ -16,7 +16,7 @@ export class DocumentTemplateDetail extends Document {
   @Prop()
   _id: string;
 
-  @Prop({required: false})
+  @Prop({required: false, type: Object})
   size: {
     width: number;
     height: number;
