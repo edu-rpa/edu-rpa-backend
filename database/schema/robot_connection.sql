@@ -123,7 +123,7 @@ CREATE TABLE robot_connection
     PRIMARY KEY (robot_key, connection_key),
     FOREIGN KEY (robot_key) REFERENCES robot (robot_key),
     FOREIGN KEY (connection_key) REFERENCES connection (connection_key)
-);
+) DEFAULT CHARSET=utf8mb4;
 
 ALTER TABLE robot_connection ADD COLUMN isActivate boolean default  true;
 

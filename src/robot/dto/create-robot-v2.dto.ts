@@ -6,7 +6,7 @@ import { AuthorizationProvider } from 'src/connection/entity/connection.entity';
 import { CreateRobotDto } from './create-robot.dto';
 
 export interface CreateRobotProvider {
-  provider: AuthorizationProvider,
+  provider?: AuthorizationProvider,
   connectionKey: string
 } 
 
