@@ -127,3 +127,5 @@ CREATE TABLE robot_connection
 
 ALTER TABLE robot_connection ADD COLUMN isActivate boolean default  true;
 
+USE report;
+SELECT * FROM robot_run_detail WHERE uuid = 'TestStream123' ORDER BY kw_id ASC;
