@@ -21,7 +21,9 @@ export class GoogleDriveStrategy extends PassportStrategy(Strategy, 'google-driv
         'https://www.googleapis.com/auth/drive.appdata',
         'https://www.googleapis.com/auth/drive.metadata',
         'https://www.googleapis.com/auth/drive.install',
-        'https://www.googleapis.com/auth/drive.file'
+        'https://www.googleapis.com/auth/drive.file',
+        'email', 
+        'profile'
       ],
     })
   }
