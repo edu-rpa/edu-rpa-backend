@@ -16,7 +16,15 @@ export class GoogleDriveStrategy extends PassportStrategy(Strategy, 'google-driv
       clientID: configService.get('GOOGLE_DRIVE_CLIENT_ID'),
       clientSecret: configService.get('GOOGLE_DRIVE_CLIENT_SECRET'),
       callbackURL: configService.get('GOOGLE_DRIVE_CALLBACK_URL'),
-      scope: ['https://www.googleapis.com/auth/drive', 'email', 'profile'],
+      scope: [
+        'https://www.googleapis.com/auth/drive',
+        'https://www.googleapis.com/auth/drive.appdata',
+        'https://www.googleapis.com/auth/drive.metadata',
+        'https://www.googleapis.com/auth/drive.install',
+        'https://www.googleapis.com/auth/drive.file',
+        'email', 
+        'profile'
+      ],
     })
   }
 
