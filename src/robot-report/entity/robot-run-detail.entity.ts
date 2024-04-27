@@ -1,33 +1,89 @@
-import { Entity, Column, ManyToOne, PrimaryColumn, CreateDateColumn } from 'typeorm';
-import { User } from 'src/users/entity/user.entity';
-import { Process } from 'src/processes/entity/process.entity';
+import { Entity, Column, PrimaryColumn, CreateDateColumn } from 'typeorm';
 
 @Entity({
   database: 'report',
-  name: 'robot_run_detail'
+  name: 'robot_run_detail',
 })
 export class RobotRunDetail {
   @Column({
+    type: 'int',
     nullable: false,
-    name: 'user_id'
+    name: 'user_id',
   })
   userId: number;
 
-  @ManyToOne(() => User, (user) => user.id)
-  user: User;
-
   @Column({
+    type: 'varchar',
+    length: 50,
     nullable: false,
-    name: 'process_id'
+    name: 'process_id',
   })
   processId: string;
 
-  @ManyToOne(() => Process, (process) => process.id)
-  process: Process;
+  @Column({
+    type: 'int',
+    nullable: false,
+    name: 'version',
+  })
+  version: number;
+
+  @PrimaryColumn({
+    type: 'varchar',
+    length: 256,
+    name: 'uuid',
+  })
+  uuid: string;
 
   @Column({
+    type: 'int',
     nullable: false,
-    name: 'kw_id'
+    name: 'kw_id',
   })
-  kwId: string;
+  kwId: number;
+
+  @Column({
+    type: 'varchar',
+    length: 100,
+    nullable: false,
+    name: 'kw_name',
+  })
+  kwName: string;
+
+  @Column({
+    type: 'varchar',
+    length: 1000,
+    nullable: false,
+    name: 'kw_args',
+  })
+  kwArgs: string;
+
+  @Column({
+    type: 'varchar',
+    length: 100,
+    nullable: false,
+    name: 'kw_status',
+  })
+  kwStatus: string;
+
+  @Column({
+    type: 'varchar',
+    length: 1000,
+    nullable: false,
+    name: 'messages',
+  })
+  messages: string;
+
+  @Column({
+    type: 'datetime',
+    nullable: true,
+    name: 'start_time',
+  })
+  startTime: Date;
+
+  @Column({
+    type: 'datetime',
+    nullable: true,
+    name: 'end_time',
+  })
+  endTime: Date;
 }
