@@ -20,6 +20,7 @@ import { NotificationModule } from './notification/notification.module';
 import { LogModule } from './log/log.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { TaskScheduleModule } from './task-schedule/task-schedule.module';
+import { RobotReportModule } from './robot-report/robot-report.module';
 
 const ENV_FILE_PATH =
   process.env.NODE_ENV === 'production'
@@ -49,6 +50,22 @@ const ENV_FILE_PATH =
       inject: [ConfigService],
     }),
 
+    TypeOrmModule.forRootAsync({
+      name: 'report',
+      useFactory: (configService: ConfigService) => ({
+        type: 'mysql',
+        host: configService.get('MYSQL_HOST'),
+        port: configService.get('MYSQL_PORT'),
+        username: configService.get('MYSQL_USERNAME'),
+        password: configService.get('MYSQL_PASSWORD'),
+        database: configService.get('MYSQL_REPORT_DATABASE'),
+        migrations: [resolve(__dirname, 'migrations/*{.ts,.js}')],
+        migrationsRun: false,
+        synchronize: false, // WARNING: set to false on production! As it will drop all tables and re-create them if entities changed.
+      }),
+      inject: [ConfigService],
+    }),
+
     MongooseModule.forRootAsync({
       useFactory: (configService: ConfigService) => ({
         uri: configService.get('MONGO_URI'),
@@ -71,6 +88,7 @@ const ENV_FILE_PATH =
     NotificationModule,
     LogModule,
     TaskScheduleModule,
+    RobotReportModule,
   ],
   controllers: [AppController],
   providers: [AppService],
