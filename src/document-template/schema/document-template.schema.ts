@@ -22,6 +22,9 @@ export class DocumentTemplateDetail extends Document {
     height: number;
   };
 
+  @Prop({required: false, type: Boolean, default: false})
+  isScanned: boolean;
+
   @Prop({required: true, type: Object, default: {}})
   dataTemplate: {
     [label: string]: Rectangle;
