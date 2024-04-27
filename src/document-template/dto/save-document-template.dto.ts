@@ -8,6 +8,9 @@ export class SaveDocumentTemplateDto {
     height: number;
   };
 
+  @IsNotEmpty()
+  isScanned: boolean;
+
   @IsObject()
   dataTemplate: {
     [label: string]: Rectangle;
