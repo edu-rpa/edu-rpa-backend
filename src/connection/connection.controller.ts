@@ -147,11 +147,7 @@ export class ConnectionController {
   }
 
   @Post('/connectionKey')
-  async getConnectionByConnectionKey(
-    @Body() body: {
-      connectionKeys: string[]
-    }
-  ) {
+  async getConnectionByConnectionKey(@Body() body: { connectionKeys: string[] }) {
     try {
       let result = await this.connectionService.getConnectionByConnectionKey(body.connectionKeys);
       return result;
@@ -170,6 +166,32 @@ export class ConnectionController {
     }
   }
 
+  @Post('/activate/robot/:robotKey')
+  async activiteRobotConnection(
+    @Param('robotKey') robotKey: string,
+    @Body() body: { connectionKey: string; status: boolean },
+  ) {
+    try {
+      let result = await this.connectionService.toggleRobotActivation(
+        robotKey,
+        body.connectionKey,
+        body.status,
+      );
+      return result;
+    } catch (error) {
+      console.log(error);
+      throw new HttpException(
+        {
+          status: HttpStatus.BAD_REQUEST,
+          error: JSON.stringify(error),
+        },
+        HttpStatus.BAD_REQUEST,
+        {
+          cause: error,
+        },
+      );
+    }
+  }
 
   @Post('/for-robot/version')
   @Public()

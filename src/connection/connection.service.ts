@@ -223,7 +223,7 @@ export class ConnectionService {
     return connections;
   }
 
-  checkValidCredentials(providers: AuthorizationProvider[], credentials: Connection[]) {
+  checkValidCreentials(providers: AuthorizationProvider[], credentials: Connection[]) {
     if (credentials.length != providers.length) {
       let credentialProviders = credentials.map((c: { provider: any }) => c.provider);
       let misMatchProvider = providers.filter((p: any) => !credentialProviders.includes(p));
@@ -278,26 +278,30 @@ export class ConnectionService {
   }
 
   async getAllConnectionsByRobotKey(robotKey: string, limit: number = 0, offset: number = 0) {
-    let robotConnectionsMapping = await this.robotConnectionRepository.find({
-      select: [],
+    const robotConnections = await this.robotConnectionRepository.find({
+      select: ['isActivate'],
+      relations: ['connection'],
       where: {
         robotKey: robotKey,
       },
-      relations: ['connection'],
-      skip: limit,
-      take: offset,
+      skip: offset,
+      take: limit,
     });
-    return robotConnectionsMapping.map(({ connection }) => {
-      const { accessToken, refreshToken, userId, ...response } = connection;
-      return response;
-    });
+
+    return robotConnections.map(({ isActivate, connection }) => ({
+      isActivate: isActivate,
+      provider: connection.provider,
+      name: connection.name,
+      createdAt: connection.createdAt,
+      userId: connection.userId,
+    }));
   }
 
   async getConnectionByConnectionKey(connectionKeys: string[]) {
-    if(!connectionKeys.length) {
+    if (!connectionKeys.length) {
       return {
-        connections: []
-      }
+        connections: [],
+      };
     }
     // Use TypeORM's query builder to build a query
     const query = this.connectionRepository
@@ -305,9 +309,20 @@ export class ConnectionService {
       .where('connection.connectionKey IN (:...connectionKeys)', { connectionKeys });
 
     // Execute the query and return the result
-    const result =  await query.getMany();
+    const result = await query.getMany();
     return {
-      connections: result
-    }
+      connections: result,
+    };
+  }
+
+  async toggleRobotActivation(robotKey: string, connectionKey: string, status: boolean) {
+    const robotConnection = await this.robotConnectionRepository.findOne({
+      where: {
+        robotKey: robotKey,
+        connectionKey: connectionKey,
+      },
+    });
+    robotConnection.isActivate = status;
+    await this.robotConnectionRepository.save(robotConnection);
   }
 }
