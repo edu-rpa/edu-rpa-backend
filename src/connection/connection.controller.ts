@@ -81,7 +81,7 @@ export class ConnectionController {
           status: HttpStatus.BAD_REQUEST,
           error: JSON.stringify(error),
         },
-        HttpStatus.FORBIDDEN,
+        HttpStatus.BAD_REQUEST,
         {
           cause: error,
         },
@@ -111,7 +111,7 @@ export class ConnectionController {
           status: HttpStatus.BAD_REQUEST,
           error: JSON.stringify(error),
         },
-        HttpStatus.FORBIDDEN,
+        HttpStatus.BAD_REQUEST,
         {
           cause: error,
         },
@@ -138,13 +138,38 @@ export class ConnectionController {
           status: HttpStatus.BAD_REQUEST,
           error: JSON.stringify(error),
         },
-        HttpStatus.FORBIDDEN,
+        HttpStatus.BAD_REQUEST,
         {
           cause: error,
         },
       );
     }
   }
+
+  @Post('/connectionKey')
+  async getConnectionByConnectionKey(
+    @Body() body: {
+      connectionKeys: string[]
+    }
+  ) {
+    try {
+      let result = await this.connectionService.getConnectionByConnectionKey(body.connectionKeys);
+      return result;
+    } catch (error) {
+      console.log(error);
+      throw new HttpException(
+        {
+          status: HttpStatus.BAD_REQUEST,
+          error: JSON.stringify(error),
+        },
+        HttpStatus.BAD_REQUEST,
+        {
+          cause: error,
+        },
+      );
+    }
+  }
+
 
   @Post('/for-robot/version')
   @Public()

@@ -292,4 +292,22 @@ export class ConnectionService {
       return response;
     });
   }
+
+  async getConnectionByConnectionKey(connectionKeys: string[]) {
+    if(!connectionKeys.length) {
+      return {
+        connections: []
+      }
+    }
+    // Use TypeORM's query builder to build a query
+    const query = this.connectionRepository
+      .createQueryBuilder('connection')
+      .where('connection.connectionKey IN (:...connectionKeys)', { connectionKeys });
+
+    // Execute the query and return the result
+    const result =  await query.getMany();
+    return {
+      connections: result
+    }
+  }
 }
