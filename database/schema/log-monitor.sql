@@ -58,3 +58,6 @@ CREATE TABLE report.robot_run_detail (
 CREATE INDEX uuid_idx ON report.robot_run_detail (uuid);
 CREATE INDEX kw_id_idx ON report.robot_run_detail (kw_id);
 
+SELECT * FROM report.robot_run_detail
+WHERE uuid = 'e3df1c4a-298b-4cad-a91f-319e0c53ec83'
+ORDER BY kw_id;
