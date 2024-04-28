@@ -162,12 +162,27 @@ export class ProcessesService {
     });
 
     const processDetail = await this.processDetailModel.findById(`${process.userId}.${process.id}`);
-    await new this.processDetailModel({
+    const newSharedProcessDetail = await new this.processDetailModel({
       _id: `${shareTo}.${process.id}`,
       xml: processDetail.xml,
       variables: processDetail.variables,
       activities: processDetail.activities,
-    }).save();
+    });
+
+    this.processBeforeShare(newSharedProcessDetail);
+
+    await newSharedProcessDetail.save();
+  }
+
+  processBeforeShare(processDetail: ProcessDetail) {
+    // remove the connection
+    processDetail.activities.forEach((activity) => {
+      for (const argumentName in activity.properties.arguments) {
+        if (argumentName === 'token_file_path') {
+          activity.properties.arguments[argumentName].value = '';
+        }
+      }
+    });
   }
 
   async getSharedToOfProcess(userId: number, processId: string) {
