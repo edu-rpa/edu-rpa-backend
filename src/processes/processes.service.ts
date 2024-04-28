@@ -155,11 +155,12 @@ export class ProcessesService {
 
   private async createSharedProcess(process: Process, shareTo: number) {
     await this.processRepository.save({
-      ...process,
       id: process.id,
       userId: shareTo,
       sharedByUserId: process.userId,
       version: 0,
+      name: process.name,
+      description: process.description,
     });
 
     const processDetail = await this.processDetailModel.findById(`${process.userId}.${process.id}`);
