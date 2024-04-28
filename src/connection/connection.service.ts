@@ -290,6 +290,7 @@ export class ConnectionService {
 
     return robotConnections.map(({ isActivate, connection }) => ({
       isActivate: isActivate,
+      connectionKey: connection.connectionKey,
       provider: connection.provider,
       name: connection.name,
       createdAt: connection.createdAt,
