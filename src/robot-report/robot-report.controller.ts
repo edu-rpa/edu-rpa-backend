@@ -1,20 +1,27 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { RobotReportService } from './robot-report.service';
+import { UserDecor } from 'src/common/decorators/user.decorator';
+import { UserPayload } from 'src/auth/strategy/jwt.strategy';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 @Controller('robot-report')
+@ApiTags('robot-report')
+@ApiBearerAuth()
 export class RobotReportController {
   constructor(private readonly robotRunDetailService: RobotReportService) {}
 
-  @Post('/log/:streamID')
+  @Get('/run-detail/:streamID/:processID/:version')
   async fetchRobotRunDetails(
+    @UserDecor() user: UserPayload,
     @Param('streamID') streamID: string,
-    @Body() body: { userID: number; processID: string; version: number },
+    @Param('processID') processID: string,
+    @Param('version') version: number,
   ) {
     return this.robotRunDetailService.getRobotRunDetails(
       streamID,
-      body.userID,
-      body.processID,
-      body.version,
+      user.id,
+      processID,
+      version,
     );
   }
 }

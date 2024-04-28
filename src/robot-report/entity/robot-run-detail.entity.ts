@@ -5,14 +5,14 @@ import { Entity, Column, PrimaryColumn, CreateDateColumn } from 'typeorm';
   name: 'robot_run_detail',
 })
 export class RobotRunDetail {
-  @Column({
+  @PrimaryColumn({
     type: 'int',
     nullable: false,
     name: 'user_id',
   })
   userId: number;
 
-  @Column({
+  @PrimaryColumn({
     type: 'varchar',
     length: 50,
     nullable: false,
@@ -20,7 +20,7 @@ export class RobotRunDetail {
   })
   processId: string;
 
-  @Column({
+  @PrimaryColumn({
     type: 'int',
     nullable: false,
     name: 'version',
@@ -34,7 +34,7 @@ export class RobotRunDetail {
   })
   uuid: string;
 
-  @Column({
+  @PrimaryColumn({
     type: 'int',
     nullable: false,
     name: 'kw_id',

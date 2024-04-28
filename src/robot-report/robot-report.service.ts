@@ -23,24 +23,17 @@ export class RobotReportService {
     version: number,
   ): Promise<RobotRunDetail[]> {
     try {
-      const result = await this.robotRunDetailRepository
-        .createQueryBuilder('r')
-        .select([
-          'r.kw_id',
-          'r.kw_name',
-          'r.kw_args',
-          'r.kw_status',
-          'r.messages',
-          'r.start_time',
-          'r.end_time',
-          'TIMESTAMPDIFF(SECOND, r.start_time, r.end_time) AS elapsed_time',
-        ])
-        .where('r.uuid = :uuid', { uuid })
-        .andWhere('r.user_id = :userId', { userId })
-        .andWhere('r.process_id = :processId', { processId })
-        .andWhere('r.version = :version', { version })
-        .orderBy('r.kw_id')
-        .getMany();
+      const result = await this.robotRunDetailRepository.find({
+        where: {
+          uuid,
+          userId,
+          processId,
+          version,
+        },
+        order: {
+          kwId: 'ASC',
+        },
+      });
       return result;
     } catch (error) {
       console.log(error);
