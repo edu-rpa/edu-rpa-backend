@@ -128,6 +128,7 @@ export class ProcessesService {
   async shareProcess(userId: number, processId: string, shareToEmails: string[]) {
     const process = await this.processRepository.findOne({
       where: { id: processId, userId },
+      relations: ['user'],
     });
     if (!process) {
       throw new ProcessNotFoundException();
