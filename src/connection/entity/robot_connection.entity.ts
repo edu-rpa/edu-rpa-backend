@@ -27,7 +27,8 @@ export class RobotConnection {
   })
   isActivate: boolean;
 
-  @ManyToOne(() => Robot)
+  // TODO: update the inverse side of this relationship
+  @ManyToOne(() => Robot, undefined, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'robot_key', referencedColumnName: 'robotKey' })
   robot: Robot;
 

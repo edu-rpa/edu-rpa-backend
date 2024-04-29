@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query, Delete } from '@nestjs/common';
 import { ApiBearerAuth, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { RobotService } from './robot.service';
 import { UserDecor } from 'src/common/decorators/user.decorator';
@@ -38,4 +38,11 @@ export class RobotController {
     return await this.robotService.createRobot(user.id, createRobotDto);
   }
 
+  @Delete('/:id')
+  async deleteRobot(
+    @UserDecor() user: UserPayload,
+    @Param('id') id: string
+  ) {
+    return this.robotService.deleteRobot(user.id, id);
+  }
 }
