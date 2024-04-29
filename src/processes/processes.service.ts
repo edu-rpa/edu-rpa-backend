@@ -180,7 +180,7 @@ export class ProcessesService {
     // remove the connection
     processDetail.activities.forEach((activity) => {
       for (const argumentName in activity.properties.arguments) {
-        if (argumentName === 'token_file_path') {
+        if (argumentName === 'Connection') {
           activity.properties.arguments[argumentName].value = '';
         }
       }
