@@ -63,7 +63,7 @@ export class RobotReportService {
         'robot_run_overall.uuid',
         'robot_run_overall.start_time',
         'robot_run_overall.end_time',
-        'TIMESTAMPDIFF(SECOND, robot_run_overall.start_time, robot_run_overall.end_time) AS time_execution',
+        'robot_run_overall.elapsed_time as time_execution',
       ])
       .where('robot_run_overall.process_id = :processId', { processId })
       .andWhere('robot_run_overall.user_id = :userId', { userId })
