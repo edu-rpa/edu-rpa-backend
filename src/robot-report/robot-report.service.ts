@@ -89,10 +89,7 @@ export class RobotReportService {
     const queryBuilder = this.robotRunOverallRepository.createQueryBuilder('robot_run_overall');
 
     queryBuilder
-      .select(
-        'AVG(TIMESTAMPDIFF(SECOND, robot_run_overall.start_time, robot_run_overall.end_time))',
-        'avg_time_execution',
-      )
+      .select('AVG(robot_run_overall.elapsed_time)', 'avg_time_execution')
       .where('robot_run_overall.process_id = :processId', { processId })
       .andWhere('robot_run_overall.user_id = :userId', { userId })
       .andWhere('robot_run_overall.version = :version', { version })
